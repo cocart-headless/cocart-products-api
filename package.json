@@ -1,0 +1,31 @@
+{
+	"title": "CoCart Products API Package",
+	"name": "cocart-products-api",
+	"version": "1.0.0",
+	"private": false,
+	"contributors": [
+		"sebd86",
+		"cocartforwc"
+	],
+	"author": "Sébastien Dumont",
+	"author_uri": "https://sebastiendumont.com",
+	"homepage": "https://cocart.xyz/",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/co-cart/cocart-products-api.git"
+	},
+	"bugs": {
+		"url": "https://github.com/co-cart/cocart-products-api/issues"
+	},
+	"license": "GPL-3.0",
+	"copyright": "Copyright (c) 2022, Sébastien Dumont",
+	"description": "Provides a public view of the products on store for CoCart.",
+	"tags": "",
+	"keywords": [
+		"wordpress",
+		"package",
+		"woocommerce"
+	],
+	"devDependencies": {},
+	"dependencies": {}
+}
