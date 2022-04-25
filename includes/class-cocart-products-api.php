@@ -22,8 +22,9 @@ class Package {
 	 * Initiate Package.
 	 *
 	 * @access public
+	 * @static
 	 */
-	public function init() {
+	public static function init() {
 		add_action( 'cocart_rest_api_controllers', array( __CLASS__, 'include_api_controllers' ) );
 		add_filter( 'cocart_rest_api_get_rest_namespaces', array( __CLASS__, 'add_rest_namespace' ) );
 	}
@@ -68,6 +69,8 @@ class Package {
 	 * @static
 	 */
 	public static function include_api_controllers() {
+		include_once dirname( __FILE__ ) . '/class-cocart-datetime.php';
+
 		// CoCart REST API v1 controllers.
 		include_once dirname( __FILE__ ) . '/api/v1/class-cocart-abstract-terms-controller.php';
 		include_once dirname( __FILE__ ) . '/api/v1/class-cocart-product-attribute-terms-controller.php';

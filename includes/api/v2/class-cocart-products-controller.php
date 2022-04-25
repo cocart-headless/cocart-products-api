@@ -1,6 +1,6 @@
 <?php
 /**
- * REST API: Products controller
+ * CoCart - Products controller
  *
  * Handles requests to the /products/ endpoint.
  *
@@ -794,7 +794,7 @@ class CoCart_Products_V2_Controller extends CoCart_Products_Controller {
 	 * Choose the correct method based on tax display mode.
 	 *
 	 * @access protected
-	 * @param  string $tax_display_mode Provided tax display mode.
+	 * @param  string $tax_display_mode - Provided tax display mode.
 	 * @return string Valid tax display mode.
 	 */
 	protected function get_tax_display_mode( $tax_display_mode = '' ) {
@@ -806,7 +806,7 @@ class CoCart_Products_V2_Controller extends CoCart_Products_Controller {
 	 * Choose the correct method based on tax display mode.
 	 *
 	 * @access protected
-	 * @param  string $tax_display_mode If returned prices are incl or excl of tax.
+	 * @param  string $tax_display_mode - If returned prices are incl or excl of tax.
 	 * @return string Function name.
 	 */
 	protected function get_price_from_tax_display_mode( $tax_display_mode ) {
@@ -889,7 +889,7 @@ class CoCart_Products_V2_Controller extends CoCart_Products_Controller {
 		);
 
 		$schema['properties'] = array(
-			'products'              => array(
+			'products'       => array(
 				'description' => __( 'Returned products based on result criteria.', 'cart-rest-api-for-woocommerce' ),
 				'type'        => 'object',
 				'context'     => array( 'view' ),
@@ -1075,25 +1075,25 @@ class CoCart_Products_V2_Controller extends CoCart_Products_Controller {
 								'type'        => 'object',
 								'context'     => array( 'view' ),
 								'properties'  => array(
-									'currency_code'               => array(
+									'currency_code'       => array(
 										'description' => __( 'Currency code.', 'cart-rest-api-for-woocommerce' ),
 										'type'        => 'string',
 										'context'     => array( 'view' ),
 										'readonly'    => true,
 									),
-									'currency_symbol'             => array(
+									'currency_symbol'     => array(
 										'description' => __( 'Currency symbol.', 'cart-rest-api-for-woocommerce' ),
 										'type'        => 'string',
 										'context'     => array( 'view' ),
 										'readonly'    => true,
 									),
-									'currency_minor_unit'         => array(
+									'currency_minor_unit' => array(
 										'description' => __( 'Currency minor unit.', 'cart-rest-api-for-woocommerce' ),
 										'type'        => 'integer',
 										'context'     => array( 'view' ),
 										'readonly'    => true,
 									),
-									'currency_decimal_separator'  => array(
+									'currency_decimal_separator' => array(
 										'description' => __( 'Currency decimal separator.', 'cart-rest-api-for-woocommerce' ),
 										'type'        => 'string',
 										'context'     => array( 'view' ),
@@ -1105,13 +1105,13 @@ class CoCart_Products_V2_Controller extends CoCart_Products_Controller {
 										'context'     => array( 'view' ),
 										'readonly'    => true,
 									),
-									'currency_prefix'             => array(
+									'currency_prefix'     => array(
 										'description' => __( 'Currency prefix.', 'cart-rest-api-for-woocommerce' ),
 										'type'        => 'string',
 										'context'     => array( 'view' ),
 										'readonly'    => true,
 									),
-									'currency_suffix'             => array(
+									'currency_suffix'     => array(
 										'description' => __( 'Currency suffix.', 'cart-rest-api-for-woocommerce' ),
 										'type'        => 'string',
 										'context'     => array( 'view' ),
@@ -1468,27 +1468,27 @@ class CoCart_Products_V2_Controller extends CoCart_Products_Controller {
 											'properties'  => array(
 												'from'     => array(
 													'description' => __( "Start date of sale price, in the site's timezone.", 'cart-rest-api-for-woocommerce' ),
-													'type'        => 'date-time',
-													'context'     => array( 'view' ),
-													'readonly'    => true,
+													'type' => 'date-time',
+													'context' => array( 'view' ),
+													'readonly' => true,
 												),
 												'from_gmt' => array(
 													'description' => __( 'Start date of sale price, as GMT.', 'cart-rest-api-for-woocommerce' ),
-													'type'        => 'date-time',
-													'context'     => array( 'view' ),
-													'readonly'    => true,
+													'type' => 'date-time',
+													'context' => array( 'view' ),
+													'readonly' => true,
 												),
 												'to'       => array(
 													'description' => __( "End date of sale price, in the site's timezone.", 'cart-rest-api-for-woocommerce' ),
-													'type'        => 'date-time',
-													'context'     => array( 'view' ),
-													'readonly'    => true,
+													'type' => 'date-time',
+													'context' => array( 'view' ),
+													'readonly' => true,
 												),
 												'to_gmt'   => array(
 													'description' => __( 'End date of sale price, as GMT.', 'cart-rest-api-for-woocommerce' ),
-													'type'        => 'date-time',
-													'context'     => array( 'view' ),
-													'readonly'    => true,
+													'type' => 'date-time',
+													'context' => array( 'view' ),
+													'readonly' => true,
 												),
 											),
 											'readonly'    => true,
@@ -1500,45 +1500,45 @@ class CoCart_Products_V2_Controller extends CoCart_Products_Controller {
 											'properties'  => array(
 												'currency_code'   => array(
 													'description' => __( 'Currency code.', 'cart-rest-api-for-woocommerce' ),
-													'type'        => 'string',
-													'context'     => array( 'view' ),
-													'readonly'    => true,
+													'type' => 'string',
+													'context' => array( 'view' ),
+													'readonly' => true,
 												),
 												'currency_symbol' => array(
 													'description' => __( 'Currency symbol.', 'cart-rest-api-for-woocommerce' ),
-													'type'        => 'string',
-													'context'     => array( 'view' ),
-													'readonly'    => true,
+													'type' => 'string',
+													'context' => array( 'view' ),
+													'readonly' => true,
 												),
 												'currency_minor_unit' => array(
 													'description' => __( 'Currency minor unit.', 'cart-rest-api-for-woocommerce' ),
-													'type'        => 'integer',
-													'context'     => array( 'view' ),
-													'readonly'    => true,
+													'type' => 'integer',
+													'context' => array( 'view' ),
+													'readonly' => true,
 												),
 												'currency_decimal_separator' => array(
 													'description' => __( 'Currency decimal separator.', 'cart-rest-api-for-woocommerce' ),
-													'type'        => 'string',
-													'context'     => array( 'view' ),
-													'readonly'    => true,
+													'type' => 'string',
+													'context' => array( 'view' ),
+													'readonly' => true,
 												),
 												'currency_thousand_separator' => array(
 													'description' => __( 'Currency thousand separator.', 'cart-rest-api-for-woocommerce' ),
-													'type'        => 'string',
-													'context'     => array( 'view' ),
-													'readonly'    => true,
+													'type' => 'string',
+													'context' => array( 'view' ),
+													'readonly' => true,
 												),
 												'currency_prefix' => array(
 													'description' => __( 'Currency prefix.', 'cart-rest-api-for-woocommerce' ),
-													'type'        => 'string',
-													'context'     => array( 'view' ),
-													'readonly'    => true,
+													'type' => 'string',
+													'context' => array( 'view' ),
+													'readonly' => true,
 												),
 												'currency_suffix' => array(
 													'description' => __( 'Currency suffix.', 'cart-rest-api-for-woocommerce' ),
-													'type'        => 'string',
-													'context'     => array( 'view' ),
-													'readonly'    => true,
+													'type' => 'string',
+													'context' => array( 'view' ),
+													'readonly' => true,
 												),
 											),
 											'readonly'    => true,
@@ -1551,7 +1551,7 @@ class CoCart_Products_V2_Controller extends CoCart_Products_Controller {
 									'type'        => 'object',
 									'context'     => array( 'view' ),
 									'properties'  => array(
-										'is_purchasable'    => array(
+										'is_purchasable' => array(
 											'description' => __( 'Is product purchasable?', 'cart-rest-api-for-woocommerce' ),
 											'type'        => 'boolean',
 											'context'     => array( 'view' ),
@@ -1565,22 +1565,22 @@ class CoCart_Products_V2_Controller extends CoCart_Products_Controller {
 											'properties'  => array(
 												'min_purchase' => array(
 													'description' => __( 'Minimum purchase quantity allowed for product.', 'cart-rest-api-for-woocommerce' ),
-													'type'        => 'integer',
-													'context'     => array( 'view' ),
-													'default'     => 1,
-													'readonly'    => true,
+													'type' => 'integer',
+													'context' => array( 'view' ),
+													'default' => 1,
+													'readonly' => true,
 												),
 												'max_purchase' => array(
 													'description' => __( 'Maximum purchase quantity allowed based on stock (if managed).', 'cart-rest-api-for-woocommerce' ),
-													'type'        => 'integer',
-													'context'     => array( 'view' ),
-													'default'     => -1,
-													'readonly'    => true,
+													'type' => 'integer',
+													'context' => array( 'view' ),
+													'default' => -1,
+													'readonly' => true,
 												),
 											),
 											'readonly'    => true,
 										),
-										'rest_url'          => array(
+										'rest_url'       => array(
 											'description' => __( 'The REST URL for adding the product to cart.', 'cart-rest-api-for-woocommerce' ),
 											'type'        => 'string',
 											'context'     => array( 'view' ),
@@ -1868,19 +1868,19 @@ class CoCart_Products_V2_Controller extends CoCart_Products_Controller {
 					),
 				),
 			),
-			'page'              => array(
+			'page'           => array(
 				'description' => __( 'Current page of pagination.', 'cart-rest-api-for-woocommerce' ),
 				'type'        => 'integer',
 				'context'     => array( 'view' ),
 				'readonly'    => true,
 			),
-			'total_pages'       => array(
+			'total_pages'    => array(
 				'description' => __( 'Total number of pages based on result criteria.', 'cart-rest-api-for-woocommerce' ),
 				'type'        => 'integer',
 				'context'     => array( 'view' ),
 				'readonly'    => true,
 			),
-			'total_products'    => array(
+			'total_products' => array(
 				'description' => __( 'Total of available products in store.', 'cart-rest-api-for-woocommerce' ),
 				'type'        => 'integer',
 				'context'     => array( 'view' ),
@@ -1893,7 +1893,7 @@ class CoCart_Products_V2_Controller extends CoCart_Products_Controller {
 
 		foreach ( $attachment_sizes as $size ) {
 			// Generate the product featured image URL properties for each attachment size.
-			$schema['properties']['products']['images']['items']['properties']['src']['properties'][ $size ] = array(
+			$schema['properties']['products']['properties']['images']['items']['properties']['src']['properties'][ $size ] = array(
 				'description' => sprintf(
 					/* translators: %s: Product image URL */
 					__( 'The product image URL for "%s".', 'cart-rest-api-for-woocommerce' ),
@@ -1906,8 +1906,8 @@ class CoCart_Products_V2_Controller extends CoCart_Products_Controller {
 			);
 
 			// Generate the variation product featured image URL properties for each attachment size.
-			if ( isset( $schema['properties']['products']['variations']['items']['properties']['featured_image']['properties'] ) ) {
-				$schema['properties']['variations']['items']['properties']['featured_image']['properties'][ $size ] = array(
+			if ( isset( $schema['properties']['products']['properties']['variations']['items']['properties']['featured_image']['properties'] ) ) {
+				$schema['properties']['products']['properties']['variations']['items']['properties']['featured_image']['properties'][ $size ] = array(
 					'description' => sprintf(
 						/* translators: %s: Product image URL */
 						__( 'The product image URL for "%s".', 'cart-rest-api-for-woocommerce' ),
