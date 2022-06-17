@@ -82,14 +82,14 @@ class Package {
 		include_once dirname( __FILE__ ) . '/rest-api/v1/class-cocart-product-variations-controller.php';
 
 		// CoCart REST API v2 controllers.
-		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-abstract-terms-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-product-attribute-terms-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-product-attributes-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-product-categories-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-product-reviews-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-product-tags-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-products-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-product-variations-controller.php';
+		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-rest-abstract-terms-v2-controller.php';
+		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-rest-product-attribute-terms-v2-controller.php';
+		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-rest-product-attributes-v2-controller.php';
+		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-rest-product-categories-v2-controller.php';
+		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-rest-product-reviews-v2-controller.php';
+		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-rest-product-tags-v2-controller.php';
+		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-rest-products-v2-controller.php';
+		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-rest-product-variations-v2-controller.php';
 	} // END include_api_controllers()
 
 	/**
