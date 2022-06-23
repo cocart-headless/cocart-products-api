@@ -6,7 +6,6 @@
  * @package CoCart\Products API
  * @since   2.8.1
  * @version 3.4.0
- * @license GPL-2.0+
  */
 
 namespace CoCart\ProductsAPI;
@@ -134,13 +133,13 @@ class Package {
 	 */
 	protected static function get_v2_controllers() {
 		return array(
-			'cocart-v2-product-attributes'      => 'CoCart_Product_Attributes_V2_Controller',
-			'cocart-v2-product-attribute-terms' => 'CoCart_Product_Attribute_Terms_V2_Controller',
-			'cocart-v2-product-categories'      => 'CoCart_Product_Categories_V2_Controller',
-			'cocart-v2-product-reviews'         => 'CoCart_Product_Reviews_V2_Controller',
-			'cocart-v2-product-tags'            => 'CoCart_Product_Tags_V2_Controller',
-			'cocart-v2-products'                => 'CoCart_Products_V2_Controller',
-			'cocart-v2-product-variations'      => 'CoCart_Product_Variations_V2_Controller',
+			'cocart-v2-product-attributes'      => 'CoCart_REST_Product_Attributes_V2_Controller',
+			'cocart-v2-product-attribute-terms' => 'CoCart_REST_Product_Attribute_Terms_V2_Controller',
+			'cocart-v2-product-categories'      => 'CoCart_REST_Product_Categories_V2_Controller',
+			'cocart-v2-product-reviews'         => 'CoCart_REST_Product_Reviews_V2_Controller',
+			'cocart-v2-product-tags'            => 'CoCart_REST_Product_Tags_V2_Controller',
+			'cocart-v2-products'                => 'CoCart_REST_Products_V2_Controllers',
+			'cocart-v2-product-variations'      => 'CoCart_REST_Product_Variations_V2_Controller',
 		);
 	} // END get_v2_controllers()
 

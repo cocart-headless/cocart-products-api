@@ -1,16 +1,17 @@
 <?php
 /**
- * REST API: Product Variations controller
+ * REST API: Product Variations v2 controller.
  *
  * Handles requests to the /products/variations endpoint.
  *
  * @author  Sébastien Dumont
- * @package CoCart\API\Products\v2
+ * @package CoCart\RESTAPI\Products\v2
  * @since   3.1.0
- * @license GPL-2.0+
  */
 
-defined( 'ABSPATH' ) || exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * CoCart REST API v2 - Product Variations controller class.
@@ -18,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @package CoCart Products/API
  * @extends CoCart_Product_Variations_Controller
  */
-class CoCart_Product_Variations_V2_Controller extends CoCart_Product_Variations_Controller {
+class CoCart_REST_Product_Variations_V2_Controller extends CoCart_Product_Variations_Controller {
 
 	/**
 	 * Endpoint namespace.
@@ -83,7 +84,9 @@ class CoCart_Product_Variations_V2_Controller extends CoCart_Product_Variations_
 	 * Validate the variation exists and is part of the variable product.
 	 *
 	 * @access public
-	 * @param  WP_REST_Request $request Full details about the request.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
 	 * @return WP_Error|bool
 	 */
 	public function validate_variation( $request ) {
@@ -109,9 +112,13 @@ class CoCart_Product_Variations_V2_Controller extends CoCart_Product_Variations_
 	/**
 	 * Prepare a single variation output for response.
 	 *
+	 * @uses CoCart_Products_V2_Controller
+	 *
 	 * @access public
-	 * @param  WC_Product      $product Product instance.
-	 * @param  WP_REST_Request $request Full details about the request.
+	 *
+	 * @param WC_Product      $product Product instance.
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
 	 * @return WP_REST_Response
 	 */
 	public function prepare_object_for_response( $product, $request ) {
@@ -130,7 +137,7 @@ class CoCart_Product_Variations_V2_Controller extends CoCart_Product_Variations_
 		 * refers to product type being prepared for the response.
 		 *
 		 * @param WP_REST_Response $response The response object.
-		 * @param WC_Product       $product   Product object.
+		 * @param WC_Product       $product Product object.
 		 * @param WP_REST_Request  $request Full details about the request.
 		 */
 		return apply_filters( "cocart_prepare_{$this->post_type}_object_v2", $response, $product, $request );
@@ -140,7 +147,9 @@ class CoCart_Product_Variations_V2_Controller extends CoCart_Product_Variations_
 	 * Get a single item.
 	 *
 	 * @access public
-	 * @param  WP_REST_Request $request Full details about the request.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_item( $request ) {
@@ -156,9 +165,11 @@ class CoCart_Product_Variations_V2_Controller extends CoCart_Product_Variations_
 	 * Prepare links for the request.
 	 *
 	 * @access protected
-	 * @param  WC_Product      $product Product object.
-	 * @param  WP_REST_Request $request Request object.
-	 * @return array           $links   Links for the given product.
+	 *
+	 * @param WC_Product      $product Product object.
+	 * @param WP_REST_Request $request Request object.
+	 *
+	 * @return array $links Links for the given product.
 	 */
 	protected function prepare_links( $product, $request ) {
 		$controller = new CoCart_Products_V2_Controller();

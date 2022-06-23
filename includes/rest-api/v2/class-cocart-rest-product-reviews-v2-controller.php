@@ -1,13 +1,12 @@
 <?php
 /**
- * REST API: Product Reviews controller
+ * REST API: Product Reviews v2 controller.
  *
  * Handles requests to the /products/reviews/ endpoint.
  *
  * @author  Sébastien Dumont
- * @package CoCart\API\Products\v2
+ * @package CoCart\RESTAPI\Products\v2
  * @since   3.1.0
- * @license GPL-2.0+
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package CoCart Products/API
  * @extends CoCart_Product_Reviews_V2_Controller
  */
-class CoCart_Product_Reviews_V2_Controller extends CoCart_Product_Reviews_Controller {
+class CoCart_REST_Product_Reviews_V2_Controller extends CoCart_Product_Reviews_Controller {
 
 	/**
 	 * Endpoint namespace.

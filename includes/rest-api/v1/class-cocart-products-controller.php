@@ -1,15 +1,13 @@
 <?php
 /**
- * CoCart - Products controller
+ * REST API: Products v1 controller.
  *
  * Handles requests to the /products/ endpoint.
  *
- * @author   Sébastien Dumont
- * @category API
- * @package  CoCart\API\Products\v1
- * @since    3.1.0
- * @version  3.4.1
- * @license  GPL-2.0+
+ * @author  Sébastien Dumont
+ * @package CoCart\RESTAPI\Products\v1
+ * @since   3.1.0
+ * @version 3.4.1
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -498,7 +496,7 @@ class CoCart_Products_Controller extends WP_REST_Controller {
 				$operator    = $request[ $key . '_operator' ] && isset( $operator_mapping[ $request[ $key . '_operator' ] ] ) ? $operator_mapping[ $request[ $key . '_operator' ] ] : 'IN';
 				$tax_query[] = array(
 					'taxonomy' => $taxonomy,
-					'field'    => 'term_id',
+					'field'    => is_numeric( $request[ $key ] ) ? 'term_id' : 'slug',
 					'terms'    => $request[ $key ],
 					'operator' => $operator,
 				);
@@ -1772,7 +1770,7 @@ class CoCart_Products_Controller extends WP_REST_Controller {
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 		$params['category']           = array(
-			'description'       => __( 'Limit result set to products assigned a specific category slug.', 'cart-rest-api-for-woocommerce' ),
+			'description'       => __( 'Limit result set to products assigned a specific category ID or slug.', 'cart-rest-api-for-woocommerce' ),
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
 			'validate_callback' => 'rest_validate_request_arg',
@@ -1786,7 +1784,7 @@ class CoCart_Products_Controller extends WP_REST_Controller {
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 		$params['tag']                = array(
-			'description'       => __( 'Limit result set to products assigned a specific tag slug.', 'cart-rest-api-for-woocommerce' ),
+			'description'       => __( 'Limit result set to products assigned a specific tag ID or slug.', 'cart-rest-api-for-woocommerce' ),
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
 			'validate_callback' => 'rest_validate_request_arg',

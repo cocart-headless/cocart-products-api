@@ -6,10 +6,9 @@
  * @author  Sébastien Dumont
  * @package CoCart\Products API
  * @since   3.0.0
- * @license GPL-2.0+
  */
 
-namespace CoCart\ProductsAPI;
+namespace CoCart\RestApi\Products;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

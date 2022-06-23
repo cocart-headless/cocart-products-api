@@ -1,13 +1,12 @@
 <?php
 /**
- * REST API: Product Attributes controller
+ * REST API: Product Attributes v2 controller.
  *
- * Handles requests to the products/attributes endpoint.
+ * Handles requests to the /products/attributes endpoint.
  *
  * @author  Sébastien Dumont
- * @package CoCart\API\Products\v1
+ * @package CoCart\RESTAPI\Products\v2
  * @since   3.1.0
- * @license GPL-2.0+
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package CoCart Products/API
  * @extends CoCart_Product_Attributes_Controller
  */
-class CoCart_Product_Attributes_V2_Controller extends CoCart_Product_Attributes_Controller {
+class CoCart_REST_Product_Attributes_V2_Controller extends CoCart_Product_Attributes_Controller {
 
 	/**
 	 * Endpoint namespace.

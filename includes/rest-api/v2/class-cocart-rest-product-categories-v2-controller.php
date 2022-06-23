@@ -1,13 +1,12 @@
 <?php
 /**
- * REST API: Product Categories controller
+ * REST API: Product Categories v2 controller.
  *
- * Handles requests to the products/categories endpoint.
+ * Handles requests to the /products/categories endpoint.
  *
  * @author  Sébastien Dumont
- * @package CoCart\API\Products\v2
+ * @package CoCart\RESTAPI\Products\v2
  * @since   3.1.0
- * @license GPL-2.0+
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package CoCart Products/API
  * @extends CoCart_Product_Categories_Controller
  */
-class CoCart_Product_Categories_V2_Controller extends CoCart_Product_Categories_Controller {
+class CoCart_REST_Product_Categories_V2_Controller extends CoCart_Product_Categories_Controller {
 
 	/**
 	 * Endpoint namespace.
@@ -33,9 +32,11 @@ class CoCart_Product_Categories_V2_Controller extends CoCart_Product_Categories_
 	 * Prepare a single product category output for response.
 	 *
 	 * @access public
-	 * @param  WP_Term         $item    Term object.
-	 * @param  WP_REST_Request $request Request instance.
-	 * @return WP_REST_Response
+	 *
+	 * @param WP_Term         $item    Term object.
+	 * @param WP_REST_Request $request Request instance.
+	 *
+	 * @return WP_REST_Response $response Response object.
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		// Get category display type.
@@ -89,9 +90,9 @@ class CoCart_Product_Categories_V2_Controller extends CoCart_Product_Categories_
 		 *
 		 * Allows modification of the term data right before it is returned.
 		 *
-		 * @param WP_REST_Response  $response  The response object.
-		 * @param object            $item      The original term object.
-		 * @param WP_REST_Request   $request   Request used to generate the response.
+		 * @param WP_REST_Response $response  The response object.
+		 * @param object           $item      The original term object.
+		 * @param WP_REST_Request  $request   Request used to generate the response.
 		 */
 		return apply_filters( "cocart_prepare_{$this->taxonomy}", $response, $item, $request );
 	}

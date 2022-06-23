@@ -1,11 +1,10 @@
 <?php
 /**
- * REST API: Abstract Rest Terms Controller
+ * REST API: Abstract Rest Terms v2 controller.
  *
  * @author  Sébastien Dumont
- * @package CoCart\API\Products\v2
+ * @package CoCart\RESTAPI\Products\v2
  * @since   3.1.0
- * @license GPL-2.0+
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -17,7 +16,7 @@ if ( ! class_exists( 'CoCart_REST_Terms_V2_Controller' ) ) {
 	/**
 	 * CoCart REST API v2 - Terms controller class.
 	 *
-	 * @package CoCart Products/API
+	 * @package CoCart Products/RESTAPI
 	 * @extends CoCart_REST_Terms_Controller
 	 */
 	abstract class CoCart_REST_Terms_V2_Controller extends CoCart_REST_Terms_Controller {
