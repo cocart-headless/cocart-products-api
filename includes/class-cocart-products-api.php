@@ -138,7 +138,7 @@ class Package {
 			'cocart-v2-product-categories'      => 'CoCart_REST_Product_Categories_V2_Controller',
 			'cocart-v2-product-reviews'         => 'CoCart_REST_Product_Reviews_V2_Controller',
 			'cocart-v2-product-tags'            => 'CoCart_REST_Product_Tags_V2_Controller',
-			'cocart-v2-products'                => 'CoCart_REST_Products_V2_Controllers',
+			'cocart-v2-products'                => 'CoCart_REST_Products_V2_Controller',
 			'cocart-v2-product-variations'      => 'CoCart_REST_Product_Variations_V2_Controller',
 		);
 	} // END get_v2_controllers()
