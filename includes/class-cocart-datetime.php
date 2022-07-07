@@ -8,7 +8,7 @@
  * @since   3.0.0
  */
 
-namespace CoCart\RestApi\Products;
+namespace CoCart\ProductsAPI;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

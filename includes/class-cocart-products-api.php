@@ -5,7 +5,7 @@
  * @author  Sébastien Dumont
  * @package CoCart\Products API
  * @since   2.8.1
- * @version 3.4.0
+ * @version 4.0.0
  */
 
 namespace CoCart\ProductsAPI;
@@ -24,7 +24,7 @@ class Package {
 	 * @static
 	 */
 	public static function init() {
-		//add_action( 'cocart_rest_api_controllers', array( __CLASS__, 'include_api_controllers' ) );
+		add_action( 'cocart_rest_api_controllers', array( __CLASS__, 'dependencies' ) );
 		add_filter( 'cocart_rest_api_get_rest_namespaces', array( __CLASS__, 'add_rest_namespace' ) );
 	}
 
@@ -62,34 +62,14 @@ class Package {
 	} // END get_path()
 
 	/**
-	 * Includes the API controllers.
+	 * Includes dependencies for the API.
 	 *
 	 * @access public
 	 * @static
 	 */
-	public static function include_api_controllers() {
+	public static function dependencies() {
 		include_once dirname( __FILE__ ) . '/class-cocart-datetime.php';
-
-		// CoCart REST API v1 controllers.
-		include_once dirname( __FILE__ ) . '/rest-api/v1/class-cocart-abstract-terms-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v1/class-cocart-product-attribute-terms-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v1/class-cocart-product-attributes-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v1/class-cocart-product-categories-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v1/class-cocart-product-reviews-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v1/class-cocart-product-tags-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v1/class-cocart-products-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v1/class-cocart-product-variations-controller.php';
-
-		// CoCart REST API v2 controllers.
-		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-rest-abstract-terms-v2-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-rest-product-attribute-terms-v2-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-rest-product-attributes-v2-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-rest-product-categories-v2-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-rest-product-reviews-v2-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-rest-product-tags-v2-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-rest-products-v2-controller.php';
-		include_once dirname( __FILE__ ) . '/rest-api/v2/class-cocart-rest-product-variations-v2-controller.php';
-	} // END include_api_controllers()
+	} // END dependencies()
 
 	/**
 	 * Adds the REST API namespaces.
