@@ -24,7 +24,7 @@ if ( ! class_exists( 'CoCart\ProductsAPI\Package', false ) ) {
  */
 if ( ! function_exists( 'cocart_products_api_package' ) ) {
 	function cocart_products_api_package() {
-		return \CoCart\ProductsAPI\Package::init();
+		return CoCart\ProductsAPI\Package::init();
 	}
 
 	cocart_products_api_package();
