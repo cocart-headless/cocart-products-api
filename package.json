@@ -1,7 +1,7 @@
 {
 	"title": "CoCart Products API Package",
 	"name": "cocart-products-api",
-	"version": "1.0.0",
+	"version": "4.0.0-beta.1",
 	"private": false,
 	"contributors": [
 		"sebd86",
@@ -24,7 +24,8 @@
 	"keywords": [
 		"wordpress",
 		"package",
-		"woocommerce"
+		"woocommerce",
+		"products"
 	],
 	"devDependencies": {},
 	"dependencies": {}
