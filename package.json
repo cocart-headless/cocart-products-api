@@ -27,6 +27,10 @@
 		"woocommerce",
 		"products"
 	],
-	"devDependencies": {},
+	"devDependencies": {
+		"grunt": "1.5.2",
+		"grunt-text-replace": "0.4.0",
+		"load-grunt-tasks": "5.1.0"
+	},
 	"dependencies": {}
 }
