@@ -7,7 +7,7 @@
  * @author  Sébastien Dumont
  * @package CoCart\RESTAPI\Products\v1
  * @since   3.1.0
- * @version 3.4.1
+ * @version 4.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -614,7 +614,7 @@ class CoCart_Products_Controller extends WP_REST_Controller {
 		}
 
 		// Filter by Catalog Visibility
-		$catalog_visibility = $request['catalog_visibility'];
+		$catalog_visibility = $request->get_param( 'catalog_visibility' );
 		$visibility_options = wc_get_product_visibility_options();
 
 		if ( in_array( $catalog_visibility, array_keys( $visibility_options ), true ) ) {
@@ -631,7 +631,9 @@ class CoCart_Products_Controller extends WP_REST_Controller {
 		}
 
 		// Filter by Product Rating
-		if ( ! empty( $request['rating'] ) ) {
+		$rating = $request->get_param( 'rating' );
+
+		if ( ! empty( $rating ) ) {
 			$rating_terms = array();
 
 			foreach ( $rating as $value ) {
@@ -1160,7 +1162,7 @@ class CoCart_Products_Controller extends WP_REST_Controller {
 					'description' => __( 'Catalog visibility.', 'cart-rest-api-for-woocommerce' ),
 					'type'        => 'string',
 					'default'     => 'visible',
-					'enum'        => array( 'visible', 'catalog', 'search', 'hidden' ),
+					'enum'        => array( 'any', 'visible', 'catalog', 'search', 'hidden' ),
 					'context'     => array( 'view' ),
 					'readonly'    => true,
 				),

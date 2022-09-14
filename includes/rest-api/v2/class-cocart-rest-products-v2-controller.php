@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * CoCart REST API v2 - Products controller class.
  *
  * @package CoCart Products/API
- * @extends CoCart_REST_Products_v2_Controller
+ * @extends CoCart_Products_Controller
  */
 class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 
@@ -165,6 +165,52 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 
 		return $response;
 	} // END get_items()
+
+	/**
+	 * Prepare links for the request.
+	 *
+	 * @access protected
+	 *
+	 * @since 4.0.0 Introduced.
+	 *
+	 * @param WC_Product      $product Product object.
+	 * @param WP_REST_Request $request Request object.
+	 *
+	 * @return array Links for the given product.
+	 */
+	protected function prepare_links( $product, $request ) {
+		$links = array(
+			'self'       => array(
+				'permalink' => cocart_get_permalink( get_permalink( $product->get_id() ) ),
+				'href'      => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $product->get_id() ) ),
+			),
+			'collection' => array(
+				'permalink' => cocart_get_permalink( wc_get_page_permalink( 'shop' ) ),
+				'href'      => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
+			),
+		);
+
+		if ( $product->get_parent_id() ) {
+			$links['parent_product'] = array(
+				'permalink' => cocart_get_permalink( get_permalink( $product->get_parent_id() ) ),
+				'href'      => rest_url( sprintf( '/%s/products/%d', $this->namespace, $product->get_parent_id() ) ),
+			);
+		}
+
+		// If product is a variable product, return links to all variations.
+		if ( $product->is_type( 'variable' ) && $product->has_child() ) {
+			$variations = $product->get_children();
+
+			foreach ( $variations as $variation_product ) {
+				$links['variations'][ $variation_product ] = array(
+					'permalink' => cocart_get_permalink( get_permalink( $variation_product ) ),
+					'href'      => rest_url( sprintf( '/%s/products/%d/variations/%d', $this->namespace, $product->get_id(), $variation_product ) ),
+				);
+			}
+		}
+
+		return $links;
+	} // END prepare_links()
 
 	/**
 	 * Prepare a single product output for response.
@@ -338,7 +384,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * @access protected
 	 *
 	 * @param WC_Product|WC_Product_Variation $product Product instance.
-	 * @return array $images
+	 *
+	 * @return array $images Array of image data.
 	 */
 	protected function get_images( $product ) {
 		$images           = array();
@@ -405,7 +452,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * @access protected
 	 *
 	 * @param WC_Product $product Product instance.
-	 * @return array
+	 *
+	 * @return array $data Product data.
 	 */
 	protected function get_product_data( $product ) {
 		$type         = $product->get_type();
@@ -440,7 +488,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 			'name'               => $product->get_name( 'view' ),
 			'type'               => $type,
 			'slug'               => $product->get_slug( 'view' ),
-			'permalink'          => $product->get_permalink(),
+			'permalink'          => cocart_get_permalink( $product->get_permalink() ),
 			'sku'                => $product->get_sku( 'view' ),
 			'description'        => $product->get_description( 'view' ),
 			'short_description'  => $product->get_short_description( 'view' ),
@@ -530,7 +578,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * @access protected
 	 *
 	 * @param WC_Variation_Product $product Product instance.
-	 * @return array
+	 *
+	 * @return array $data Product data.
 	 */
 	protected function get_variation_product_data( $product ) {
 		$data = self::get_product_data( $product );
@@ -565,7 +614,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * @param WC_Product $product  Product instance.
 	 * @param string     $taxonomy Taxonomy slug.
 	 *
-	 * @return array
+	 * @return array $terms Taxonomy terms.
 	 */
 	protected function get_taxonomy_terms( $product, $taxonomy = 'cat' ) {
 		$terms = array();
@@ -590,7 +639,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * @param int   $product_id Product ID.
 	 * @param array $attribute  Attribute data.
 	 *
-	 * @return array
+	 * @return array $attributes Attribute options.
 	 */
 	protected function get_attribute_options( $product_id, $attribute ) {
 		$attributes = array();
@@ -626,7 +675,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @param WC_Product|WC_Product_Variation $product Product instance.
 	 *
-	 * @return array
+	 * @return array $attributes Attributes data.
 	 */
 	protected function get_attributes( $product ) {
 		$attributes = array();
@@ -682,8 +731,9 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * @access public
 	 *
 	 * @param WC_Product $product Product Object.
+	 * @param string     $type Type of products to return.
 	 *
-	 * @param string     $type    Type of products to return.
+	 * @return array $connected_products Product data.
 	 */
 	public function get_connected_products( $product, $type ) {
 		switch ( $type ) {
@@ -713,7 +763,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 					$connected_products[] = array(
 						'id'          => $id,
 						'name'        => $_product->get_name( 'view' ),
-						'permalink'   => $_product->get_permalink(),
+						'permalink'   => cocart_get_permalink( $_product->get_permalink() ),
 						'price'       => cocart_prepare_money_response( $_product->get_price( 'view' ), wc_get_price_decimals() ),
 						'add_to_cart' => array(
 							'text'        => $_product->add_to_cart_text(),
@@ -757,13 +807,13 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	} // END product_rest_url()
 
 	/**
-	 * Returns an array of REST URLs for each ID.
+	 * Returns an Array of REST URLs for each ID.
 	 *
 	 * @access public
 	 *
 	 * @param array $ids Product ID's.
 	 *
-	 * @return array
+	 * @return array $urls Array of REST URLs.
 	 */
 	public function product_rest_urls( $ids = array() ) {
 		$rest_urls = array();
@@ -783,7 +833,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * @param WC_Product $product Product Object.
 	 * @param string     $type    Product type.
 	 *
-	 * @return string
+	 * @return string $rest_url REST URL for adding product to the cart.
 	 */
 	public function add_to_cart_rest_url( $product, $type ) {
 		$id = $product->get_id();
@@ -857,8 +907,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access public
 	 *
-	 * @param \WC_Product $product Product object.
-	 * @param string      $tax_display_mode If returned prices are incl or excl of tax.
+	 * @param WC_Product $product Product object.
+	 * @param string     $tax_display_mode If returned prices are incl or excl of tax.
 	 *
 	 * @return array
 	 */
@@ -918,7 +968,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access public
 	 *
-	 * @since 4.0.0
+	 * @since 4.0.0 Introduced.
 	 *
 	 * @param string $taxonomy Taxonomy slug.
 	 * @param int    $page_num Page number.
@@ -980,7 +1030,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 						'readonly'    => true,
 					),
 					'parent_id'          => array(
-						'description' => __( 'Product parent ID.', 'cart-rest-api-for-woocommerce' ),
+						'description' => __( 'ID of the parent product, if applicable.', 'cart-rest-api-for-woocommerce' ),
 						'type'        => 'integer',
 						'context'     => array( 'view' ),
 						'readonly'    => true,
