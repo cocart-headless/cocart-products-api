@@ -198,7 +198,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		}
 
 		// If product is a variable product, return links to all variations.
-		if ( $product->is_type( 'variable' ) && $product->has_child() ) {
+		if ( $product->is_type( 'variable' ) && $product->has_child() || $product->is_type( 'variable-subscription' ) && $product->has_child() ) {
 			$variations = $product->get_children();
 
 			foreach ( $variations as $variation_product ) {
@@ -917,7 +917,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 
 		$price = array();
 
-		if ( $product->is_type( 'variable' ) && $product->has_child() ) {
+		if ( $product->is_type( 'variable' ) && $product->has_child() || $product->is_type( 'variable-subscription' ) && $product->has_child() ) {
 			$prices = $product->get_variation_prices( true );
 
 			if ( empty( $prices['price'] ) ) {
