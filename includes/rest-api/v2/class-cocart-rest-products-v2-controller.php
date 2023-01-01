@@ -573,6 +573,246 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	} // END get_product_data()
 
 	/**
+	 * Get requested product data.
+	 *
+	 * @access protected
+	 *
+	 * @since 4.0.0 Introduced.
+	 *
+	 * @param WC_Product      $product Product instance.
+	 * @param WP_REST_Request $request Request object.
+	 *
+	 * @return array $data Product data.
+	 */
+	protected function get_requested_data( $product, $request ) {
+		$type         = $product->get_type();
+		$rating_count = $product->get_rating_count( 'view' );
+		$average      = $product->get_average_rating( 'view' );
+
+		$tax_display_mode = $this->get_tax_display_mode();
+		$price_function   = $this->get_price_from_tax_display_mode( $tax_display_mode );
+
+		// If we have a variable product, get the price from the variations (this will use the min value).
+		if ( $product->is_type( 'variable' ) || $product->is_type( 'variable-subscription' ) ) {
+			$regular_price = $product->get_variation_regular_price();
+			$sale_price    = $product->get_variation_sale_price();
+		} else {
+			$regular_price = $product->get_regular_price();
+			$sale_price    = $product->get_sale_price();
+		}
+
+		// Provide purchase quantity if not a variable or external product type.
+		$purchase_quantity = array();
+
+		if ( ! $product->is_type( 'variable' ) && ! $product->is_type( 'variable-subscription' ) && ! $product->is_type( 'external' ) ) {
+			$purchase_quantity = array(
+				'min_purchase' => apply_filters( 'cocart_quantity_minimum_requirement', $product->get_min_purchase_quantity(), $product ),
+				'max_purchase' => apply_filters( 'cocart_quantity_maximum_allowed', $product->get_max_purchase_quantity(), $product ),
+			);
+		}
+
+		$fields = $this->get_fields_for_response( $request );
+
+		// Product data response container.
+		$product_data = array();
+
+		if ( rest_is_field_included( 'id', $fields ) ) {
+			$product_data['id'] = $product->get_id();
+		}
+
+		if ( rest_is_field_included( 'parent_id', $fields ) ) {
+			$product_data['parent_id'] = $product->get_parent_id( 'view' );
+		}
+
+		if ( rest_is_field_included( 'name', $fields ) ) {
+			$product_data['name'] = $product->get_name( 'view' );
+		}
+
+		if ( rest_is_field_included( 'type', $fields ) ) {
+			$product_data['type'] = $type;
+		}
+
+		if ( rest_is_field_included( 'slug', $fields ) ) {
+			$product_data['slug'] = $product->get_slug( 'view' );
+		}
+
+		if ( rest_is_field_included( 'permalink', $fields ) ) {
+			$product_data['permalink'] = cocart_get_permalink( $product->get_permalink() );
+		}
+
+		if ( rest_is_field_included( 'sku', $fields ) ) {
+			$product_data['sku'] = $product->get_sku( 'view' );
+		}
+
+		if ( rest_is_field_included( 'description', $fields ) ) {
+			$product_data['description'] = $product->get_description( 'view' );
+		}
+
+		if ( rest_is_field_included( 'short_description', $fields ) ) {
+			$product_data['short_description'] = $product->get_short_description( 'view' );
+		}
+
+		if ( rest_is_field_included( 'dates', $fields ) ) {
+			$product_data['dates'] = array(
+				'created'      => cocart_prepare_date_response( strtotime( $product->get_date_created( 'view' ) ), false ),
+				'created_gmt'  => cocart_prepare_date_response( strtotime( $product->get_date_created( 'view' ) ) ),
+				'modified'     => cocart_prepare_date_response( strtotime( $product->get_date_modified( 'view' ) ), false ),
+				'modified_gmt' => cocart_prepare_date_response( strtotime( $product->get_date_modified( 'view' ) ) ),
+			);
+		}
+
+		if ( rest_is_field_included( 'featured', $fields ) ) {
+			$product_data['featured'] = $product->is_featured();
+		}
+
+		if ( rest_is_field_included( 'prices', $fields ) ) {
+			$product_data['prices'] = array(
+				'price'         => cocart_prepare_money_response( $price_function( $product ) ),
+				'regular_price' => cocart_prepare_money_response( $price_function( $product, array( 'price' => $regular_price ) ) ),
+				'sale_price'    => $product->get_sale_price( 'view' ) ? cocart_prepare_money_response( $price_function( $product, array( 'price' => $sale_price ) ) ) : '',
+				'price_range'   => $this->get_price_range( $product, $tax_display_mode ),
+				'on_sale'       => $product->is_on_sale( 'view' ),
+				'date_on_sale'  => array(
+					'from'     => cocart_prepare_date_response( strtotime( $product->get_date_on_sale_from( 'view' ) ), false ),
+					'from_gmt' => cocart_prepare_date_response( strtotime( $product->get_date_on_sale_from( 'view' ) ) ),
+					'to'       => cocart_prepare_date_response( strtotime( $product->get_date_on_sale_to( 'view' ) ), false ),
+					'to_gmt'   => cocart_prepare_date_response( strtotime( $product->get_date_on_sale_to( 'view' ) ) ),
+				),
+				'currency'      => cocart_get_store_currency(),
+			);
+		}
+
+		if ( rest_is_field_included( 'hidden_conditions', $fields ) ) {
+			$product_data['hidden_conditions'] = array(
+				'virtual'           => $product->is_virtual(),
+				'downloadable'      => $product->is_downloadable(),
+				'manage_stock'      => $product->managing_stock(),
+				'sold_individually' => $product->is_sold_individually(),
+				'reviews_allowed'   => $product->get_reviews_allowed( 'view' ),
+				'shipping_required' => $product->needs_shipping(),
+			);
+		}
+
+		if ( rest_is_field_included( 'average_rating', $fields ) ) {
+			$product_data['average_rating'] = $average;
+		}
+
+		if ( rest_is_field_included( 'review_count', $fields ) ) {
+			$product_data['review_count'] = $product->get_review_count( 'view' );
+		}
+
+		if ( rest_is_field_included( 'rating_count', $fields ) ) {
+			$product_data['rating_count'] = $rating_count;
+		}
+
+		if ( rest_is_field_included( 'rated_out_of', $fields ) ) {
+			$product_data['rated_out_of'] = html_entity_decode( wp_strip_all_tags( wc_get_rating_html( $average, $rating_count ) ) );
+		}
+
+		if ( rest_is_field_included( 'images', $fields ) ) {
+			$product_data['images'] = $this->get_images( $product );
+		}
+
+		if ( rest_is_field_included( 'categories', $fields ) ) {
+			$product_data['categories'] = $this->get_taxonomy_terms( $product );
+		}
+
+		if ( rest_is_field_included( 'tags', $fields ) ) {
+			$product_data['tags'] = $this->get_taxonomy_terms( $product, 'tag' );
+		}
+
+		if ( rest_is_field_included( 'attributes', $fields ) ) {
+			$product_data['attributes'] = $this->get_attributes( $product );
+		}
+
+		if ( rest_is_field_included( 'default_attributes', $fields ) ) {
+			$product_data['default_attributes'] = $this->get_default_attributes( $product );
+		}
+
+		if ( rest_is_field_included( 'variations', $fields ) ) {
+			$product_data['variations'] = ( $product->is_type( 'variable' ) && $product->has_child() ) || ( $product->is_type( 'variable-subscription' ) && $product->has_child() ) ? $this->get_variations( $product ) : array();
+		}
+
+		if ( rest_is_field_included( 'grouped_products', $fields ) ) {
+			$product_data['grouped_products'] = ( $product->is_type( 'grouped' ) && $product->has_child() ) ? $product->get_children() : array();
+		}
+
+		if ( rest_is_field_included( 'stock', $fields ) ) {
+			$product_data['stock'] = array(
+				'is_in_stock'        => $product->is_in_stock(),
+				'stock_quantity'     => $product->get_stock_quantity( 'view' ),
+				'stock_status'       => $product->get_stock_status( 'view' ),
+				'backorders'         => $product->get_backorders( 'view' ),
+				'backorders_allowed' => $product->backorders_allowed(),
+				'backordered'        => $product->is_on_backorder(),
+				'low_stock_amount'   => $product->get_low_stock_amount( 'view' ),
+			);
+		}
+
+		if ( rest_is_field_included( 'weight', $fields ) ) {
+			$product_data['weight'] = array(
+				'value' => $product->get_weight( 'view' ),
+				'unit'  => get_option( 'woocommerce_weight_unit' ),
+			);
+		}
+
+		if ( rest_is_field_included( 'dimensions', $fields ) ) {
+			$product_data['dimensions'] = array(
+				'length' => $product->get_length( 'view' ),
+				'width'  => $product->get_width( 'view' ),
+				'height' => $product->get_height( 'view' ),
+				'unit'   => get_option( 'woocommerce_dimension_unit' ),
+			);
+		}
+
+		if ( rest_is_field_included( 'reviews', $fields ) ) {
+			// Add review data to products if requested.
+			$product_data['reviews'] = $request['show_reviews'] ? $this->get_reviews( $product ) : array();
+		}
+
+		if ( rest_is_field_included( 'related', $fields ) ) {
+			$product_data['related'] = $this->get_connected_products( $product, 'related' );
+		}
+
+		if ( rest_is_field_included( 'upsells', $fields ) ) {
+			$product_data['upsells'] = $this->get_connected_products( $product, 'upsells' );
+		}
+
+		if ( rest_is_field_included( 'cross_sells', $fields ) ) {
+			$product_data['cross_sells'] = $this->get_connected_products( $product, 'cross_sells' );
+		}
+
+		if ( rest_is_field_included( 'total_sales', $fields ) ) {
+			$product_data['total_sales'] = $product->get_total_sales( 'view' );
+		}
+
+		if ( rest_is_field_included( 'external_url', $fields ) ) {
+			$product_data['external_url'] = $product->is_type( 'external' ) ? $product->get_product_url( 'view' ) : '';
+		}
+
+		if ( rest_is_field_included( 'button_text', $fields ) ) {
+			$product_data['button_text'] = $product->is_type( 'external' ) ? $product->get_button_text( 'view' ) : '';
+		}
+
+		if ( rest_is_field_included( 'add_to_cart', $fields ) ) {
+			$product_data['add_to_cart'] = array(
+				'text'              => $product->add_to_cart_text(),
+				'description'       => $product->add_to_cart_description(),
+				'has_options'       => $product->has_options(),
+				'is_purchasable'    => $product->is_purchasable(),
+				'purchase_quantity' => $purchase_quantity,
+				'rest_url'          => $this->add_to_cart_rest_url( $product, $type ),
+			);
+		}
+
+		if ( rest_is_field_included( 'meta_data', $fields ) ) {
+			$product_data['meta_data'] = $this->get_meta_data( $product );
+		}
+
+		return $product_data;
+	} // END get_requested_data()
+
+	/**
 	 * Get variation product data.
 	 *
 	 * @access protected
