@@ -1001,6 +1001,27 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	} // END get_all_product_taxonomies()
 
 	/**
+	 * Gets the product meta data.
+	 *
+	 * @access public
+	 *
+	 * @since 4.0.0 Introduced.
+	 *
+	 * @param WC_Product $product Product object.
+	 *
+	 * @return array
+	 */
+	public function get_meta_data( $product ) {
+		$meta_data = $product->get_meta_data();
+
+		$meta = array();
+
+		foreach ( $meta_data as $meta_key => $meta_value ) {
+			$meta[ $meta_value->key ] = $meta_value;
+		}
+
+		return $meta;
+	} // END get_meta_data()
 
 	/**
 	 * Gets an array of fields to be included on the response.
