@@ -295,9 +295,9 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 				'attributes'     => $expected_attributes,
 				'featured_image' => $attachments,
 				'prices'         => array(
-					'price'         => cocart_prepare_money_response( $price_function( $variation ), wc_get_price_decimals() ),
-					'regular_price' => cocart_prepare_money_response( $price_function( $variation, array( 'price' => $variation->get_regular_price() ) ), wc_get_price_decimals() ),
-					'sale_price'    => $variation->get_sale_price( 'view' ) ? cocart_prepare_money_response( $price_function( $variation, array( 'price' => $variation->get_sale_price() ) ), wc_get_price_decimals() ) : '',
+					'price'         => cocart_prepare_money_response( $price_function( $variation ) ),
+					'regular_price' => cocart_prepare_money_response( $price_function( $variation, array( 'price' => $variation->get_regular_price() ) ) ),
+					'sale_price'    => $variation->get_sale_price( 'view' ) ? cocart_prepare_money_response( $price_function( $variation, array( 'price' => $variation->get_sale_price() ) ) ) : '',
 					'on_sale'       => $variation->is_on_sale( 'view' ),
 					'date_on_sale'  => array(
 						'from'     => cocart_prepare_date_response( strtotime( $variation->get_date_on_sale_from( 'view' ) ), false ),
@@ -491,9 +491,9 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 			),
 			'featured'           => $product->is_featured(),
 			'prices'             => array(
-				'price'         => cocart_prepare_money_response( $price_function( $product ), wc_get_price_decimals() ),
-				'regular_price' => cocart_prepare_money_response( $price_function( $product, array( 'price' => $regular_price ) ), wc_get_price_decimals() ),
-				'sale_price'    => $product->get_sale_price( 'view' ) ? cocart_prepare_money_response( $price_function( $product, array( 'price' => $sale_price ) ), wc_get_price_decimals() ) : '',
+				'price'         => cocart_prepare_money_response( $price_function( $product ) ),
+				'regular_price' => cocart_prepare_money_response( $price_function( $product, array( 'price' => $regular_price ) ) ),
+				'sale_price'    => $product->get_sale_price( 'view' ) ? cocart_prepare_money_response( $price_function( $product, array( 'price' => $sale_price ) ) ) : '',
 				'price_range'   => $this->get_price_range( $product, $tax_display_mode ),
 				'on_sale'       => $product->is_on_sale( 'view' ),
 				'date_on_sale'  => array(
@@ -1008,7 +1008,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 						'id'          => $id,
 						'name'        => $_product->get_name( 'view' ),
 						'permalink'   => cocart_get_permalink( $_product->get_permalink() ),
-						'price'       => cocart_prepare_money_response( $_product->get_price( 'view' ), wc_get_price_decimals() ),
+						'price'       => (float) cocart_prepare_money_response( $_product->get_price( 'view' ) ),
 						'add_to_cart' => array(
 							'text'        => $_product->add_to_cart_text(),
 							'description' => $_product->add_to_cart_description(),
@@ -1174,12 +1174,12 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 
 				if ( $min_price !== $max_price ) {
 					$price = array(
-						'from' => cocart_prepare_money_response( $min_price, wc_get_price_decimals() ),
-						'to'   => cocart_prepare_money_response( $max_price, wc_get_price_decimals() ),
+						'from' => (float) cocart_prepare_money_response( $min_price ),
+						'to'   => (float) cocart_prepare_money_response( $max_price ),
 					);
 				} else {
 					$price = array(
-						'from' => cocart_prepare_money_response( $min_price, wc_get_price_decimals() ),
+						'from' => (float) cocart_prepare_money_response( $min_price ),
 						'to'   => '',
 					);
 				}
@@ -1198,8 +1198,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 
 			if ( ! empty( $child_prices ) ) {
 				$price = array(
-					'from' => cocart_prepare_money_response( min( $child_prices ), wc_get_price_decimals() ),
-					'to'   => cocart_prepare_money_response( max( $child_prices ), wc_get_price_decimals() ),
+					'from' => (float) cocart_prepare_money_response( min( $child_prices ) ),
+					'to'   => (float) cocart_prepare_money_response( max( $child_prices ) ),
 				);
 			}
 		}
