@@ -217,6 +217,9 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access public
 	 *
+	 * @since 3.1.0 Introduced.
+	 * @since 4.0.0 Replaced function `get_product_data` with `get_requested_data`.
+	 *
 	 * @param WC_Product      $product Product instance.
 	 * @param WP_REST_Request $request Request object.
 	 *
@@ -225,28 +228,14 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	public function prepare_object_for_response( $product, $request ) {
 		// Check what product type before returning product data.
 		if ( $product->get_type() !== 'variation' ) {
-			$data = $this->get_product_data( $product );
+			$data = $this->get_requested_data( $product, $request );
 		} else {
-			$data = $this->get_variation_product_data( $product );
+			$data = $this->get_variation_product_data( $product, $request );
 		}
 
-		// Add review data to products if requested.
-		if ( $request['show_reviews'] ) {
-			$data['reviews'] = $this->get_reviews( $product );
-		}
+		$data = $this->add_additional_fields_to_object( $data, $request );
+		$data = $this->filter_response_by_context( $data, 'view' );
 
-		// Return each variation if the variable product has variations available.
-		if ( $product->is_type( 'variable' ) && $product->has_child() ) {
-			$data['variations'] = $this->get_variations( $product );
-		}
-
-		// Add grouped products data.
-		if ( $product->is_type( 'grouped' ) && $product->has_child() ) {
-			$data['grouped_products'] = $product->get_children();
-		}
-
-		$data     = $this->add_additional_fields_to_object( $data, $request );
-		$data     = $this->filter_response_by_context( $data, 'view' );
 		$response = rest_ensure_response( $data );
 		$response->add_links( $this->prepare_links( $product, $request ) );
 
