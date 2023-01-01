@@ -567,7 +567,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 */
 	public function prepare_object_for_response( $product, $request ) {
 		// Check what product type before returning product data.
-		if ( $product->get_type() !== 'variation' ) {
+		if ( $product->get_type() !== 'variation' || ! empty( $request['include_variations'] ) ) {
 			$data = $this->get_requested_data( $product, $request );
 		} else {
 			$data = $this->get_variation_product_data( $product, $request );
@@ -1665,12 +1665,34 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		);
 	} // END get_fields_for_response()
 
+	/**
+	 * Get the query params for collections of products.
 	 *
 	 * @access public
 	 *
-	 * @return array Products Schema.
+	 * @since 4.0.0 Introduced.
+	 *
+	 * @return array $params
 	 */
-	public function get_item_schema() {
+	public function get_collection_params() {
+		$params = parent::get_collection_params();
+
+		$params['search'] = array(
+			'description'       => __( 'Limit results to those matching a string.', 'cart-rest-api-for-woocommerce' ),
+			'type'              => 'string',
+			'sanitize_callback' => 'sanitize_text_field',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		$params['include_variations'] = array(
+			'description'       => __( 'Return product variations without the parent product.', 'cart-rest-api-for-woocommerce' ),
+			'type'              => 'boolean',
+			'sanitize_callback' => 'wc_string_to_bool',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		return $params;
+	} // END get_collection_params()
 		$weight_unit    = get_option( 'woocommerce_weight_unit' );
 		$dimension_unit = get_option( 'woocommerce_dimension_unit' );
 
