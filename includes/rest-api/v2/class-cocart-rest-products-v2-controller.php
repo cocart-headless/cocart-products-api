@@ -578,30 +578,43 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * @access protected
 	 *
 	 * @param WC_Variation_Product $product Product instance.
+	 * @param WP_REST_Request $request Request object.
 	 *
 	 * @return array $data Product data.
 	 */
-	protected function get_variation_product_data( $product ) {
-		$data = self::get_product_data( $product );
+	protected function get_variation_product_data( $product, $request = array() ) {
+		$data = self::get_requested_data( $product, $request );
+
+		$fields_not_required = array(
+			'type',
+			'short_description',
+			'hidden_conditions' => array( 'reviews_allowed' ),
+			'average_rating',
+			'review_count',
+			'rating_count',
+			'rated_out_of',
+			'reviews',
+			'default_attributes',
+			'variations',
+			'grouped_products',
+			'related',
+			'upsells',
+			'cross_sells',
+			'external_url',
+			'button_text',
+			'add_to_cart'       => array( 'has_options' ),
+		);
 
 		// Remove fields not required for a variation.
-		unset( $data['type'] );
-		unset( $data['short_description'] );
-		unset( $data['hidden_conditions']['reviews_allowed'] );
-		unset( $data['average_rating'] );
-		unset( $data['review_count'] );
-		unset( $data['rating_count'] );
-		unset( $data['rated_out_of'] );
-		unset( $data['reviews'] );
-		unset( $data['default_attributes'] );
-		unset( $data['variations'] );
-		unset( $data['grouped_products'] );
-		unset( $data['related'] );
-		unset( $data['upsells'] );
-		unset( $data['cross_sells'] );
-		unset( $data['external_url'] );
-		unset( $data['button_text'] );
-		unset( $data['add_to_cart']['has_options'] );
+		foreach ( $fields_not_required as $key => $field ) {
+			if ( is_array( $field ) && ! empty( $field ) ) {
+				foreach ( $field as $child_field ) {
+					unset( $data[ $key ][ $child_field ] );
+				}
+			} else {
+				unset( $data[ $field ] );
+			}
+		}
 
 		return $data;
 	} // END get_variation_product_data()
