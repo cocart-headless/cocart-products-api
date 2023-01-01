@@ -456,6 +456,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * @return array $data Product data.
 	 */
 	protected function get_product_data( $product ) {
+		cocart_deprecated_function( 'CoCart_REST_Products_V2_Controller::get_product_data', '4.0', 'get_requested_data' );
+
 		$type         = $product->get_type();
 		$rating_count = $product->get_rating_count( 'view' );
 		$average      = $product->get_average_rating( 'view' );
