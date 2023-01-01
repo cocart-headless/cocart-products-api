@@ -213,6 +213,346 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	} // END prepare_links()
 
 	/**
+	 * Prepare objects query.
+	 *
+	 * @access protected
+	 *
+	 * @since 4.0.0 Introduced.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return array
+	 */
+	protected function prepare_objects_query( $request ) {
+		$args = array(
+			'offset'              => $request['offset'],
+			'order'               => strtoupper( $request['order'] ),
+			'orderby'             => strtolower( $request['orderby'] ),
+			'paged'               => $request['page'],
+			'post__in'            => $request['include'],
+			'post__not_in'        => $request['exclude'],
+			'posts_per_page'      => $request['per_page'],
+			'post_parent__in'     => $request['parent'],
+			'post_parent__not_in' => $request['parent_exclude'],
+			's'                   => $request['search'],
+			'name'                => $request['slug'],
+			'fields'              => 'ids',
+			'ignore_sticky_posts' => true,
+			'post_status'         => 'publish',
+			'date_query'          => array(),
+			'post_type'           => 'product',
+		);
+
+		// If searching for a specific SKU or including variations, allow all product post types.
+		if ( ! empty( $request['sku'] ) || ! empty( $request['include_variations'] ) ) {
+			$args['post_type'] = $this->get_post_types();
+		}
+
+		// If order by is not set then use WooCommerce default catalog setting.
+		if ( empty( $args['orderby'] ) ) {
+			$args['orderby'] = get_option( 'woocommerce_default_catalog_orderby' );
+		}
+
+		switch ( $args['orderby'] ) {
+			case 'id':
+				$args['orderby'] = 'ID'; // ID must be capitalized.
+				break;
+			case 'menu_order':
+				$args['orderby'] = 'menu_order title';
+				break;
+			case 'include':
+				$args['orderby'] = 'post__in';
+				break;
+			case 'name':
+			case 'slug':
+				$args['orderby'] = 'name';
+				break;
+			case 'alphabetical':
+				$args['orderby']  = 'title';
+				$args['order']    = 'ASC';
+				$args['meta_key'] = '';
+				break;
+			case 'reverse_alpha':
+				$args['orderby']  = 'title';
+				$args['order']    = 'DESC';
+				$args['meta_key'] = '';
+				break;
+			case 'title':
+				$args['orderby'] = 'title';
+				$args['order']   = ( 'DESC' === $args['order'] ) ? 'DESC' : 'ASC';
+				break;
+			case 'relevance':
+				$args['orderby'] = 'relevance';
+				$args['order']   = 'DESC';
+				break;
+			case 'rand':
+				$args['orderby'] = 'rand';
+				break;
+			case 'date':
+				$args['orderby'] = 'date ID';
+				$args['order']   = ( 'ASC' === $args['order'] ) ? 'ASC' : 'DESC';
+				break;
+			case 'by_stock':
+				$args['orderby']  = array(
+					'meta_value_num' => 'DESC',
+					'title'          => 'ASC',
+				);
+				$args['meta_key'] = '_stock';
+				break;
+			case 'review_count':
+				$args['orderby']  = array(
+					'meta_value_num' => 'DESC',
+					'title'          => 'ASC',
+				);
+				$args['meta_key'] = '_wc_review_count';
+				break;
+			case 'on_sale_first':
+				$args['orderby']      = array(
+					'meta_value_num' => 'DESC',
+					'title'          => 'ASC',
+				);
+				$args['meta_key']     = '_sale_price';
+				$args['meta_value']   = 0;
+				$args['meta_compare'] = '>=';
+				$args['meta_type']    = 'NUMERIC';
+				break;
+			case 'featured_first':
+				$args['orderby']  = array(
+					'meta_value' => 'DESC',
+					'title'      => 'ASC',
+				);
+				$args['meta_key'] = '_featured';
+				break;
+			case 'price_asc':
+				$args['orderby']  = 'meta_value_num';
+				$args['order']    = 'ASC';
+				$args['meta_key'] = '_price';
+				break;
+			case 'price_desc':
+				$args['orderby']  = 'meta_value_num';
+				$args['order']    = 'DESC';
+				$args['meta_key'] = '_price';
+				break;
+			case 'sales':
+				$args['orderby']  = 'meta_value_num';
+				$args['meta_key'] = 'total_sales';
+				break;
+			case 'rating':
+				$args['orderby']  = 'meta_value_num';
+				$args['order']    = 'DESC';
+				$args['meta_key'] = '_wc_average_rating';
+				break;
+		}
+
+		// Taxonomy query to filter products by type, category, tag and attribute.
+		$tax_query = array();
+
+		// Filter product type by slug...
+		if ( ! empty( $request['type'] ) ) {
+			if ( 'variation' === $request['type'] ) {
+				$args['post_type'] = 'product_variation';
+			} else {
+				$tax_query[] = array(
+					'taxonomy' => 'product_type',
+					'field'    => 'slug',
+					'terms'    => $request['type'],
+				);
+			}
+		} else {
+			// ... otherwise, check if we are including variations.
+			if ( ! empty( $request['include_variations'] ) ) {
+				$tax_query[] = array(
+					'taxonomy' => 'product_type',
+					'field'    => 'slug',
+					'terms'    => 'variation',
+					'operator' => 'NOT EXISTS'
+				);
+			}
+		}
+
+		// Set before into date query. Date query must be specified as an array of an array.
+		if ( isset( $request['before'] ) ) {
+			$args['date_query'][0]['before'] = $request['before'];
+		}
+
+		// Set after into date query. Date query must be specified as an array of an array.
+		if ( isset( $request['after'] ) ) {
+			$args['date_query'][0]['after'] = $request['after'];
+		}
+
+		$operator_mapping = array(
+			'in'     => 'IN',
+			'not_in' => 'NOT IN',
+			'and'    => 'AND',
+		);
+
+		// Map between taxonomy name and arg key.
+		$taxonomies = array(
+			'product_cat' => 'category',
+			'product_tag' => 'tag',
+		);
+
+		// Set tax_query for each passed arg.
+		foreach ( $taxonomies as $taxonomy => $key ) {
+			if ( ! empty( $request[ $key ] ) ) {
+				$operator    = $request[ $key . '_operator' ] && isset( $operator_mapping[ $request[ $key . '_operator' ] ] ) ? $operator_mapping[ $request[ $key . '_operator' ] ] : 'IN';
+				$tax_query[] = array(
+					'taxonomy' => $taxonomy,
+					'field'    => is_numeric( $request[ $key ] ) ? 'term_id' : 'slug',
+					'terms'    => $request[ $key ],
+					'operator' => $operator,
+				);
+			}
+		}
+
+		// Filter by attributes.
+		if ( ! empty( $request['attributes'] ) ) {
+			$att_queries = array();
+
+			foreach ( $request['attributes'] as $attribute ) {
+				if ( empty( $attribute['term_id'] ) && empty( $attribute['slug'] ) ) {
+					continue;
+				}
+
+				if ( in_array( $attribute['attribute'], wc_get_attribute_taxonomy_names(), true ) ) {
+					$operator      = isset( $attribute['operator'], $operator_mapping[ $attribute['operator'] ] ) ? $operator_mapping[ $attribute['operator'] ] : 'IN';
+					$att_queries[] = array(
+						'taxonomy' => $attribute['attribute'],
+						'field'    => ! empty( $attribute['term_id'] ) ? 'term_id' : 'slug',
+						'terms'    => ! empty( $attribute['term_id'] ) ? $attribute['term_id'] : $attribute['slug'],
+						'operator' => $operator,
+					);
+				}
+			}
+
+			if ( 1 < count( $att_queries ) ) {
+				// Add relation arg when using multiple attributes.
+				$relation    = $request['attribute_relation'] && isset( $operator_mapping[ $request['attribute_relation'] ] ) ? $operator_mapping[ $request['attribute_relation'] ] : 'IN';
+				$tax_query[] = array(
+					'relation' => $relation,
+					$att_queries,
+				);
+			} else {
+				$tax_query = array_merge( $tax_query, $att_queries );
+			}
+		}
+
+		// Build tax_query if taxonomies are set.
+		if ( ! empty( $tax_query ) ) {
+			if ( ! empty( $args['tax_query'] ) ) {
+				$args['tax_query'] = array_merge( $tax_query, $args['tax_query'] );
+			} else {
+				$args['tax_query'] = $tax_query;
+			}
+		}
+
+		// Hide free products.
+		if ( ! empty( $request['hide_free'] ) ) {
+			$args['meta_query'] = $this->add_meta_query(
+				$args,
+				array(
+					'key'     => '_price',
+					'value'   => 0,
+					'compare' => '>',
+					'type'    => 'DECIMAL',
+				)
+			);
+		}
+
+		// Filter featured.
+		if ( is_bool( $request['featured'] ) ) {
+			$args['tax_query'][] = array(
+				'taxonomy' => 'product_visibility',
+				'field'    => 'name',
+				'terms'    => 'featured',
+				'operator' => true === $request['featured'] ? 'IN' : 'NOT IN',
+			);
+		}
+
+		// Filter by sku.
+		if ( ! empty( $request['sku'] ) ) {
+			$skus = explode( ',', $request['sku'] );
+
+			// Include the current string as a SKU too.
+			if ( 1 < count( $skus ) ) {
+				$skus[] = $request['sku'];
+			}
+
+			$args['meta_query'] = $this->add_meta_query( // WPCS: slow query ok.
+				$args,
+				array(
+					'key'     => '_sku',
+					'value'   => $skus,
+					'compare' => 'IN',
+				)
+			);
+		}
+
+		// Price filter.
+		if ( ! empty( $request['min_price'] ) || ! empty( $request['max_price'] ) ) {
+			$args['meta_query'] = $this->add_meta_query( $args, cocart_get_min_max_price_meta_query( $request ) ); // WPCS: slow query ok.
+		}
+
+		// Filter product in stock or out of stock.
+		if ( is_bool( $request['stock_status'] ) ) {
+			$args['meta_query'] = $this->add_meta_query( // WPCS: slow query ok.
+				$args,
+				array(
+					'key'   => '_stock_status',
+					'value' => true === $request['stock_status'] ? 'instock' : 'outofstock',
+				)
+			);
+		}
+
+		// Filter by on sale products.
+		if ( is_bool( $request['on_sale'] ) ) {
+			$on_sale_key = $request['on_sale'] ? 'post__in' : 'post__not_in';
+			$on_sale_ids = wc_get_product_ids_on_sale();
+
+			// Use 0 when there's no on sale products to avoid return all products.
+			$on_sale_ids = empty( $on_sale_ids ) ? array( 0 ) : $on_sale_ids;
+
+			$args[ $on_sale_key ] = $on_sale_ids;
+		}
+
+		// Filter by Catalog Visibility
+		$catalog_visibility = $request->get_param( 'catalog_visibility' );
+		$visibility_options = wc_get_product_visibility_options();
+
+		if ( in_array( $catalog_visibility, array_keys( $visibility_options ), true ) ) {
+			$exclude_from_catalog = 'search' === $catalog_visibility ? '' : 'exclude-from-catalog';
+			$exclude_from_search  = 'catalog' === $catalog_visibility ? '' : 'exclude-from-search';
+
+			$args['tax_query'][] = array(
+				'taxonomy'      => 'product_visibility',
+				'field'         => 'name',
+				'terms'         => array( $exclude_from_catalog, $exclude_from_search ),
+				'operator'      => 'hidden' === $catalog_visibility ? 'AND' : 'NOT IN',
+				'rating_filter' => true,
+			);
+		}
+
+		// Filter by Product Rating
+		$rating = $request->get_param( 'rating' );
+
+		if ( ! empty( $rating ) ) {
+			$rating_terms = array();
+
+			foreach ( $rating as $value ) {
+				$rating_terms[] = 'rated-' . $value;
+			}
+
+			$args['tax_query'][] = array(
+				'taxonomy' => 'product_visibility',
+				'field'    => 'name',
+				'terms'    => $rating_terms,
+			);
+		}
+
+		return apply_filters( 'cocart_prepare_objects_query', $args, $request );
+	} // END prepare_objects_query()
+
+	/**
 	 * Prepare a single product output for response.
 	 *
 	 * @access public
