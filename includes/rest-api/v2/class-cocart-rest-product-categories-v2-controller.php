@@ -1,8 +1,6 @@
 <?php
 /**
- * REST API: Product Categories v2 controller.
- *
- * Handles requests to the /products/categories endpoint.
+ * REST API: CoCart_REST_Product_Categories_V2_Controller class
  *
  * @author  Sébastien Dumont
  * @package CoCart\RESTAPI\Products\v2
@@ -14,10 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * CoCart REST API v2 - Product Categories controller class.
+ * Controller for returning product categories via the REST API (API v2).
  *
- * @package CoCart Products/API
- * @extends CoCart_Product_Categories_Controller
+ * This REST API controller handles requests to return product categories
+ * via "cocart/v2/products/categories" endpoint.
+ *
+ * @since 3.1.0 Introduced.
  */
 class CoCart_REST_Product_Categories_V2_Controller extends CoCart_Product_Categories_Controller {
 
@@ -97,4 +97,4 @@ class CoCart_REST_Product_Categories_V2_Controller extends CoCart_Product_Catego
 		return apply_filters( "cocart_prepare_{$this->taxonomy}", $response, $item, $request );
 	}
 
-}
+} // END class
