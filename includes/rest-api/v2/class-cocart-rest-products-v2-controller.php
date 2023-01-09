@@ -1556,7 +1556,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @param string $taxonomy Taxonomy slug.
 	 * @param int    $page_num Page number.
-	 * @param int    $offset Offset.
+	 * @param int    $offset   Offset.
 	 *
 	 * @return array Array of taxonomy terms.
 	 */

@@ -32,6 +32,7 @@ class Package {
 	 * Initiate Package.
 	 *
 	 * @access public
+	 *
 	 * @static
 	 */
 	public static function init() {
@@ -43,7 +44,9 @@ class Package {
 	 * Return the name of the package.
 	 *
 	 * @access public
+	 *
 	 * @static
+	 *
 	 * @return string
 	 */
 	public static function get_name() {
@@ -54,7 +57,9 @@ class Package {
 	 * Return the version of the package.
 	 *
 	 * @access public
+	 *
 	 * @static
+	 *
 	 * @return string
 	 */
 	public static function get_version() {
@@ -65,7 +70,9 @@ class Package {
 	 * Return the path to the package.
 	 *
 	 * @access public
+	 *
 	 * @static
+	 *
 	 * @return string
 	 */
 	public static function get_path() {
@@ -76,6 +83,7 @@ class Package {
 	 * Includes dependencies for the API.
 	 *
 	 * @access public
+	 *
 	 * @static
 	 */
 	public static function dependencies() {
@@ -86,7 +94,9 @@ class Package {
 	 * Adds the REST API namespaces.
 	 *
 	 * @access public
+	 *
 	 * @static
+	 *
 	 * @return array
 	 */
 	public static function add_rest_namespace( $namespaces ) {
@@ -100,7 +110,9 @@ class Package {
 	 * List of controllers in the cocart/v1 namespace.
 	 *
 	 * @access protected
+	 *
 	 * @static
+	 *
 	 * @return array
 	 */
 	protected static function get_v1_controllers() {
@@ -119,7 +131,9 @@ class Package {
 	 * List of controllers in the cocart/v2 namespace.
 	 *
 	 * @access protected
+	 *
 	 * @static
+	 *
 	 * @return array
 	 */
 	protected static function get_v2_controllers() {
