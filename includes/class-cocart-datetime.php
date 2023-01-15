@@ -1,11 +1,11 @@
 <?php
 /**
- * Wrapper for PHP DateTime which adds support for gmt/utc offset when a
- * timezone is absent
+ * Class: DateTime
  *
  * @author  Sébastien Dumont
  * @package CoCart\Products API
  * @since   3.0.0
+ * @version 4.0.0
  */
 
 namespace CoCart\ProductsAPI;
@@ -16,7 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Datetime class.
+ * Wrapper for PHP DateTime which adds support for gmt/utc offset when a
+ * timezone is absent.
+ *
+ * @since 3.0.0 Introduced.
+ * @since 4.0.0 Added #[\ReturnTypeWillChange] attributes.
  */
 class DateTime extends \DateTime {
 
@@ -25,7 +29,8 @@ class DateTime extends \DateTime {
 	 * timezones are used this will equal 0.
 	 *
 	 * @access protected
-	 * @var    integer
+	 *
+	 * @var integer
 	 */
 	protected $utc_offset = 0;
 
@@ -33,6 +38,7 @@ class DateTime extends \DateTime {
 	 * Output an ISO 8601 date string in local (WordPress) timezone.
 	 *
 	 * @access public
+	 *
 	 * @return string
 	 */
 	public function __toString() {
@@ -43,7 +49,8 @@ class DateTime extends \DateTime {
 	 * Set UTC offset - this is a fixed offset instead of a timezone.
 	 *
 	 * @access public
-	 * @param  int $offset Offset.
+	 *
+	 * @param int $offset Offset.
 	 */
 	public function set_utc_offset( $offset ) {
 		$this->utc_offset = intval( $offset );
@@ -54,6 +61,7 @@ class DateTime extends \DateTime {
 	 *
 	 * @access public
 	 */
+	#[\ReturnTypeWillChange]
 	public function getOffset() {
 		return $this->utc_offset ? $this->utc_offset : parent::getOffset();
 	}
@@ -62,11 +70,15 @@ class DateTime extends \DateTime {
 	 * Set timezone.
 	 *
 	 * @access public
-	 * @param  DateTimeZone $timezone DateTimeZone instance.
+	 *
+	 * @param DateTimeZone $timezone DateTimeZone instance.
+	 *
 	 * @return DateTime
 	 */
+	#[\ReturnTypeWillChange]
 	public function setTimezone( $timezone ) {
 		$this->utc_offset = 0;
+
 		return parent::setTimezone( $timezone );
 	}
 
@@ -74,8 +86,10 @@ class DateTime extends \DateTime {
 	 * Missing in PHP 5.2 so just here so it can be supported consistently.
 	 *
 	 * @access public
+	 *
 	 * @return int
 	 */
+	#[\ReturnTypeWillChange]
 	public function getTimestamp() {
 		return method_exists( 'DateTime', 'getTimestamp' ) ? parent::getTimestamp() : $this->format( 'U' );
 	}
@@ -94,7 +108,9 @@ class DateTime extends \DateTime {
 	 * Format a date based on the offset timestamp.
 	 *
 	 * @access public
-	 * @param  string $format Date format.
+	 *
+	 * @param string $format Date format.
+	 *
 	 * @return string
 	 */
 	public function date( $format ) {
@@ -105,11 +121,13 @@ class DateTime extends \DateTime {
 	 * Return a localized date based on offset timestamp. Wrapper for date_i18n function.
 	 *
 	 * @access public
-	 * @param  string $format Date format.
+	 *
+	 * @param string $format Date format.
+	 *
 	 * @return string
 	 */
 	public function date_i18n( $format = 'Y-m-d' ) {
 		return date_i18n( $format, $this->getOffsetTimestamp() );
 	}
 
-}
+} // END class
