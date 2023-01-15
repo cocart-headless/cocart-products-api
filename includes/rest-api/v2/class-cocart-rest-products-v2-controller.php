@@ -84,10 +84,9 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access public
 	 *
-	 * @since   3.1.0 Introduced.
-	 * @since   3.2.0 Moved products to it's own object and returned also pagination information.
-	 * @since   4.0.0 Added product categories and tags.
-	 * @version 4.0.0
+	 * @since 3.1.0 Introduced.
+	 * @since 3.2.0 Moved products to it's own object and returned also pagination information.
+	 * @since 4.0.0 Added product categories and tags.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -628,6 +627,9 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 				$attachments[ $size ] = current( wp_get_attachment_image_src( $featured_image_id, $size ) );
 			}
 
+			$date_on_sale_from = $variation->get_date_on_sale_from( 'view' );
+			$date_on_sale_to   = $variation->get_date_on_sale_to( 'view' );
+
 			$variations[] = array(
 				'id'             => $variation_id,
 				'sku'            => $variation->get_sku( 'view' ),
@@ -640,10 +642,10 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 					'sale_price'    => $variation->get_sale_price( 'view' ) ? cocart_prepare_money_response( $price_function( $variation, array( 'price' => $variation->get_sale_price() ) ) ) : '',
 					'on_sale'       => $variation->is_on_sale( 'view' ),
 					'date_on_sale'  => array(
-						'from'     => cocart_prepare_date_response( strtotime( $variation->get_date_on_sale_from( 'view' ) ), false ),
-						'from_gmt' => cocart_prepare_date_response( strtotime( $variation->get_date_on_sale_from( 'view' ) ) ),
-						'to'       => cocart_prepare_date_response( strtotime( $variation->get_date_on_sale_to( 'view' ) ), false ),
-						'to_gmt'   => cocart_prepare_date_response( strtotime( $variation->get_date_on_sale_to( 'view' ) ) ),
+						'from'     => ! is_null( $date_on_sale_from ) ? cocart_prepare_date_response( $date_on_sale_from->date( 'Y-m-d\TH:i:s' ), false ) : null,
+						'from_gmt' => ! is_null( $date_on_sale_from ) ? cocart_prepare_date_response( $date_on_sale_from->date( 'Y-m-d\TH:i:s' ) ) : null,
+						'to'       => ! is_null( $date_on_sale_to ) ? cocart_prepare_date_response( $date_on_sale_to->date( 'Y-m-d\TH:i:s' ), false ) : null,
+						'to_gmt'   => ! is_null( $date_on_sale_to ) ? cocart_prepare_date_response( $date_on_sale_to->date( 'Y-m-d\TH:i:s' ) ) : null,
 					),
 					'currency'      => cocart_get_store_currency(),
 				),
@@ -984,11 +986,14 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		}
 
 		if ( rest_is_field_included( 'dates', $fields ) ) {
+			$date_created  = $product->get_date_created( 'view' );
+			$date_modified = $product->get_date_modified( 'view' );
+
 			$product_data['dates'] = array(
-				'created'      => cocart_prepare_date_response( strtotime( $product->get_date_created( 'view' ) ), false ),
-				'created_gmt'  => cocart_prepare_date_response( strtotime( $product->get_date_created( 'view' ) ) ),
-				'modified'     => cocart_prepare_date_response( strtotime( $product->get_date_modified( 'view' ) ), false ),
-				'modified_gmt' => cocart_prepare_date_response( strtotime( $product->get_date_modified( 'view' ) ) ),
+				'created'      => cocart_prepare_date_response( $date_created->date( 'Y-m-d\TH:i:s' ), false ),
+				'created_gmt'  => cocart_prepare_date_response( $date_created->date( 'Y-m-d\TH:i:s' ) ),
+				'modified'     => cocart_prepare_date_response( $date_modified->date( 'Y-m-d\TH:i:s' ), false ),
+				'modified_gmt' => cocart_prepare_date_response( $date_modified->date( 'Y-m-d\TH:i:s' ) ),
 			);
 		}
 
@@ -997,6 +1002,9 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		}
 
 		if ( rest_is_field_included( 'prices', $fields ) ) {
+			$date_on_sale_from = $product->get_date_on_sale_from( 'view' );
+			$date_on_sale_to   = $product->get_date_on_sale_to( 'view' );
+
 			$product_data['prices'] = array(
 				'price'         => cocart_prepare_money_response( $price_function( $product ) ),
 				'regular_price' => cocart_prepare_money_response( $price_function( $product, array( 'price' => $regular_price ) ) ),
@@ -1004,10 +1012,10 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 				'price_range'   => $this->get_price_range( $product, $tax_display_mode ),
 				'on_sale'       => $product->is_on_sale( 'view' ),
 				'date_on_sale'  => array(
-					'from'     => cocart_prepare_date_response( strtotime( $product->get_date_on_sale_from( 'view' ) ), false ),
-					'from_gmt' => cocart_prepare_date_response( strtotime( $product->get_date_on_sale_from( 'view' ) ) ),
-					'to'       => cocart_prepare_date_response( strtotime( $product->get_date_on_sale_to( 'view' ) ), false ),
-					'to_gmt'   => cocart_prepare_date_response( strtotime( $product->get_date_on_sale_to( 'view' ) ) ),
+					'from'     => ! is_null( $date_on_sale_from ) ? cocart_prepare_date_response( $date_on_sale_from->date( 'Y-m-d\TH:i:s' ), false ) : null,
+					'from_gmt' => ! is_null( $date_on_sale_from ) ? cocart_prepare_date_response( $date_on_sale_from->date( 'Y-m-d\TH:i:s' ) ) : null,
+					'to'       => ! is_null( $date_on_sale_to ) ? cocart_prepare_date_response( $date_on_sale_to->date( 'Y-m-d\TH:i:s' ), false ) : null,
+					'to_gmt'   => ! is_null( $date_on_sale_to ) ? cocart_prepare_date_response( $date_on_sale_to->date( 'Y-m-d\TH:i:s' ) ) : null,
 				),
 				'currency'      => cocart_get_store_currency(),
 			);
@@ -1149,7 +1157,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * @access protected
 	 *
 	 * @param WC_Variation_Product $product Product instance.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request      $request Request object.
 	 *
 	 * @return array $data Product data.
 	 */
