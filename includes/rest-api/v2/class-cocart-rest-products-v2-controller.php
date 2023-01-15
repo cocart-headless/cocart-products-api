@@ -225,8 +225,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	protected function prepare_objects_query( $request ) {
 		$args = array(
 			'offset'              => $request['offset'],
-			'order'               => strtoupper( $request['order'] ),
-			'orderby'             => strtolower( $request['orderby'] ),
+			'order'               => ! empty( $request['order'] ) ? strtoupper( $request['order'] ) : 'DESC',
+			'orderby'             => ! empty( $request['orderby'] ) ? strtolower( $request['orderby'] ) : get_option( 'woocommerce_default_catalog_orderby' ),
 			'paged'               => $request['page'],
 			'post__in'            => $request['include'],
 			'post__not_in'        => $request['exclude'],
@@ -1106,7 +1106,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 
 		if ( rest_is_field_included( 'reviews', $fields ) ) {
 			// Add review data to products if requested.
-			$product_data['reviews'] = $request['show_reviews'] ? $this->get_reviews( $product ) : array();
+			$product_data['reviews'] = isset( $request['show_reviews'] ) ? $this->get_reviews( $product ) : array();
 		}
 
 		if ( rest_is_field_included( 'related', $fields ) ) {

@@ -335,8 +335,8 @@ class CoCart_Products_Controller extends WP_REST_Controller {
 	protected function prepare_objects_query( $request ) {
 		$args = array(
 			'offset'              => $request['offset'],
-			'order'               => strtoupper( $request['order'] ),
-			'orderby'             => strtolower( $request['orderby'] ),
+			'order'               => ! empty( $request['order'] ) ? strtoupper( $request['order'] ) : 'DESC',
+			'orderby'             => ! empty( $request['orderby'] ) ? strtolower( $request['orderby'] ) : get_option( 'woocommerce_default_catalog_orderby' ),
 			'paged'               => $request['page'],
 			'post__in'            => $request['include'],
 			'post__not_in'        => $request['exclude'],
