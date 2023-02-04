@@ -18,7 +18,7 @@
 		"url": "https://github.com/co-cart/cocart-products-api/issues"
 	},
 	"license": "GPL-3.0",
-	"copyright": "Copyright (c) 2022, Sébastien Dumont",
+	"copyright": "Copyright (c) 2023, Sébastien Dumont",
 	"description": "Provides a public view of the products on store for CoCart.",
 	"tags": "",
 	"keywords": [
@@ -28,7 +28,7 @@
 		"products"
 	],
 	"devDependencies": {
-		"grunt": "1.5.2",
+		"grunt": "1.6.1",
 		"grunt-text-replace": "0.4.0",
 		"load-grunt-tasks": "5.1.0"
 	},
