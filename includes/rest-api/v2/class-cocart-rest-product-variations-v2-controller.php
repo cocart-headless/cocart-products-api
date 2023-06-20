@@ -53,7 +53,8 @@ class CoCart_REST_Product_Variations_V2_Controller extends CoCart_Product_Variat
 					'args'                => $this->get_collection_params(),
 					'permission_callback' => '__return_true',
 				),
-				'schema' => array( $this, 'get_public_item_schema' ),
+				'allow_batch' => array( 'v1' => true ),
+				'schema'      => array( $this, 'get_public_item_schema' ),
 			)
 		);
 
@@ -77,7 +78,8 @@ class CoCart_REST_Product_Variations_V2_Controller extends CoCart_Product_Variat
 					),
 					'permission_callback' => array( $this, 'validate_variation' ),
 				),
-				'schema' => array( $this, 'get_public_item_schema' ),
+				'allow_batch' => array( 'v1' => true ),
+				'schema'      => array( $this, 'get_public_item_schema' ),
 			)
 		);
 	}

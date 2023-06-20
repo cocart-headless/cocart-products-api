@@ -44,7 +44,8 @@ if ( ! class_exists( 'CoCart_REST_Terms_V2_Controller' ) ) {
 						'permission_callback' => array( $this, 'get_items_permissions_check' ),
 						'args'                => $this->get_collection_params(),
 					),
-					'schema' => array( $this, 'get_public_item_schema' ),
+					'allow_batch' => array( 'v1' => true ),
+					'schema'      => array( $this, 'get_public_item_schema' ),
 				)
 			);
 
@@ -64,7 +65,8 @@ if ( ! class_exists( 'CoCart_REST_Terms_V2_Controller' ) ) {
 							'context' => $this->get_context_param( array( 'default' => 'view' ) ),
 						),
 					),
-					'schema' => array( $this, 'get_public_item_schema' ),
+					'allow_batch' => array( 'v1' => true ),
+					'schema'      => array( $this, 'get_public_item_schema' ),
 				)
 			);
 		}
