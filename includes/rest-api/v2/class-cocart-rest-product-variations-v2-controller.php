@@ -41,7 +41,7 @@ class CoCart_REST_Product_Variations_V2_Controller extends CoCart_Product_Variat
 			$this->namespace,
 			'/' . $this->rest_base,
 			array(
-				'args'   => array(
+				'args'        => array(
 					'product_id' => array(
 						'description' => __( 'Unique identifier for the variable product.', 'cart-rest-api-for-woocommerce' ),
 						'type'        => 'integer',

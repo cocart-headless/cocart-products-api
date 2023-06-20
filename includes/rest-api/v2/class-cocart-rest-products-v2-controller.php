@@ -57,7 +57,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\w-]+)',
 			array(
-				'args'   => array(
+				'args'        => array(
 					'id' => array(
 						'description' => __( 'Unique identifier for the product.', 'cart-rest-api-for-woocommerce' ),
 						'type'        => 'string',
@@ -366,7 +366,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 					'taxonomy' => 'product_type',
 					'field'    => 'slug',
 					'terms'    => 'variation',
-					'operator' => 'NOT EXISTS'
+					'operator' => 'NOT EXISTS',
 				);
 			}
 		}
@@ -1702,7 +1702,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
-		$params['order']            = array(
+		$params['order'] = array(
 			'description'       => __( 'Sort collection by order.', 'cart-rest-api-for-woocommerce' ),
 			'type'              => 'string',
 			'enum'              => array(
