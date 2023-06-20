@@ -1091,7 +1091,7 @@ class CoCart_Products_Controller extends WP_REST_Controller {
 		$dimension_unit = get_option( 'woocommerce_dimension_unit' );
 
 		$schema = array(
-			'schema'     => 'http://json-schema.org/draft-04/schema#',
+			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => $this->post_type,
 			'type'       => 'object',
 			'properties' => array(
