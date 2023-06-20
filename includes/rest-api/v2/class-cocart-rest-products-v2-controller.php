@@ -1687,6 +1687,9 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	public function get_collection_params() {
 		$params = parent::get_collection_params();
 
+		$defaults = get_option( 'cocart_settings', array() );
+		$defaults = $defaults['products'];
+
 		$params['search'] = array(
 			'description'       => __( 'Limit results to those matching a string.', 'cart-rest-api-for-woocommerce' ),
 			'type'              => 'string',
@@ -1694,9 +1697,21 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
+		$params['order']            = array(
+			'description'       => __( 'Sort collection by order.', 'cart-rest-api-for-woocommerce' ),
+			'type'              => 'string',
+			'enum'              => array(
+				'DESC',
+				'ASC',
+			),
+			'default'           => ! empty( $defaults['order'] ) ? $defaults['order'] : 'DESC',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
 		$params['include_variations'] = array(
 			'description'       => __( 'Return product variations without the parent product.', 'cart-rest-api-for-woocommerce' ),
 			'type'              => 'boolean',
+			'default'           => ! empty( $defaults['include_variations'] ) && $defaults['include_variations'] === 'yes' ? true : false,
 			'sanitize_callback' => 'wc_string_to_bool',
 			'validate_callback' => 'rest_validate_request_arg',
 		);

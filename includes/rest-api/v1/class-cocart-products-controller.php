@@ -1741,6 +1741,9 @@ class CoCart_Products_Controller extends WP_REST_Controller {
 	public function get_collection_params() {
 		$params = parent::get_collection_params();
 
+		$defaults = get_option( 'cocart_settings', array() );
+		$defaults = $defaults['products'];
+
 		$params['slug']               = array(
 			'description'       => __( 'Limit result set to products with a specific slug.', 'cart-rest-api-for-woocommerce' ),
 			'type'              => 'string',
@@ -1884,6 +1887,7 @@ class CoCart_Products_Controller extends WP_REST_Controller {
 			'description'       => __( 'Determines if hidden or visible catalog products are shown.', 'cart-rest-api-for-woocommerce' ),
 			'type'              => 'string',
 			'enum'              => array( 'any', 'visible', 'catalog', 'search', 'hidden' ),
+			'default'           => ! empty( $defaults['catalog_visibility'] ) ? $defaults['catalog_visibility'] : 'visible',
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
@@ -1920,6 +1924,7 @@ class CoCart_Products_Controller extends WP_REST_Controller {
 				'sales',
 				'rating',
 			),
+			'default'           => ! empty( $defaults['orderby'] ) ? $defaults['orderby'] : 'menu_order',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
