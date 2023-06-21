@@ -3,7 +3,9 @@
 *.lock
 *.md
 *.zip
+/node_modules/
 composer.*
+Gruntfile.js
 package-lock.json
 package.json
 phpcs.xml
