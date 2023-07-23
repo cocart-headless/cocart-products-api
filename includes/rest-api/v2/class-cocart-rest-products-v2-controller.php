@@ -1695,13 +1695,6 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		$defaults = get_option( 'cocart_settings', array() );
 		$defaults = $defaults['products'];
 
-		$params['search'] = array(
-			'description'       => __( 'Limit results to those matching a string.', 'cart-rest-api-for-woocommerce' ),
-			'type'              => 'string',
-			'sanitize_callback' => 'sanitize_text_field',
-			'validate_callback' => 'rest_validate_request_arg',
-		);
-
 		$params['order'] = array(
 			'description'       => __( 'Sort collection by order.', 'cart-rest-api-for-woocommerce' ),
 			'type'              => 'string',
