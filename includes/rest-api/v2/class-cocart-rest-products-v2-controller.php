@@ -1693,7 +1693,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		$params = parent::get_collection_params();
 
 		$defaults = get_option( 'cocart_settings', array() );
-		$defaults = $defaults['products'];
+		$defaults = ! empty( $defaults['products'] ) ? $defaults['products'] : array();
 
 		$params['order'] = array(
 			'description'       => __( 'Sort collection by order.', 'cart-rest-api-for-woocommerce' ),
