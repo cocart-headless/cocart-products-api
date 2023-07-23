@@ -1742,7 +1742,7 @@ class CoCart_Products_Controller extends WP_REST_Controller {
 		$params = parent::get_collection_params();
 
 		$defaults = get_option( 'cocart_settings', array() );
-		$defaults = $defaults['products'];
+		$defaults = ! empty( $defaults['products'] ) ? $defaults['products'] : array();
 
 		$params['slug']               = array(
 			'description'       => __( 'Limit result set to products with a specific slug.', 'cart-rest-api-for-woocommerce' ),
