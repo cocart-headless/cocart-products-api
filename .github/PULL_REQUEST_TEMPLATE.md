@@ -1,4 +1,4 @@
-# Pull Request for CoCart Admin
+# Pull Request for CoCart Products API
 
 Thank you for contributing to CoCart. If your PR is approved please provide your WordPress dot ORG username (if you have one) so you can be credited as a contributor to the plugin. Please make sure your name is provided and a profile image is showing.
 
@@ -40,6 +40,7 @@ Testing instructions:
 <!-- You can optionally choose to enter a changelog entry by checking the box and supplying data. -->
 
 <details>
+<summary>Entry details</summary>
 
 #### Significance
 
