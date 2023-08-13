@@ -26,7 +26,7 @@ class Package {
 	 *
 	 * @var string
 	 */
-	public static $version = '4.0.0-beta.1';
+	public static $version = '4.0.0';
 
 	/**
 	 * Initiate Package.
