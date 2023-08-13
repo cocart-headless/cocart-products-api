@@ -1029,14 +1029,25 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		}
 
 		if ( rest_is_field_included( 'hidden_conditions', $fields ) ) {
-			$product_data['hidden_conditions'] = array(
-				'virtual'           => $product->is_virtual(),
-				'downloadable'      => $product->is_downloadable(),
-				'manage_stock'      => $product->managing_stock(),
-				'sold_individually' => $product->is_sold_individually(),
-				'reviews_allowed'   => $product->get_reviews_allowed( 'view' ),
-				'shipping_required' => $product->needs_shipping(),
-			);
+			$product_data['hidden_conditions'] = array();
+		}
+		if ( rest_is_field_included( 'hidden_conditions.virtual', $fields ) ) {
+			$product_data['hidden_conditions']['virtual'] = $product->is_virtual();
+		}
+		if ( rest_is_field_included( 'hidden_conditions.downloadable', $fields ) ) {
+			$product_data['hidden_conditions']['downloadable'] = $product->is_downloadable();
+		}
+		if ( rest_is_field_included( 'hidden_conditions.manage_stock', $fields ) ) {
+			$product_data['hidden_conditions']['manage_stock'] = $product->managing_stock();
+		}
+		if ( rest_is_field_included( 'hidden_conditions.sold_individually', $fields ) ) {
+			$product_data['hidden_conditions']['sold_individually'] = $product->is_sold_individually();
+		}
+		if ( rest_is_field_included( 'hidden_conditions.reviews_allowed', $fields ) ) {
+			$product_data['hidden_conditions']['reviews_allowed'] = $product->get_reviews_allowed( 'view' );
+		}
+		if ( rest_is_field_included( 'hidden_conditions.shipping_required', $fields ) ) {
+			$product_data['hidden_conditions']['shipping_required'] = $product->needs_shipping();
 		}
 
 		if ( rest_is_field_included( 'average_rating', $fields ) ) {
@@ -1084,15 +1095,28 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		}
 
 		if ( rest_is_field_included( 'stock', $fields ) ) {
-			$product_data['stock'] = array(
-				'is_in_stock'        => $product->is_in_stock(),
-				'stock_quantity'     => $product->get_stock_quantity( 'view' ),
-				'stock_status'       => $product->get_stock_status( 'view' ),
-				'backorders'         => $product->get_backorders( 'view' ),
-				'backorders_allowed' => $product->backorders_allowed(),
-				'backordered'        => $product->is_on_backorder(),
-				'low_stock_amount'   => $product->get_low_stock_amount( 'view' ),
-			);
+			$product_data['stock'] = array();
+		}
+		if ( rest_is_field_included( 'stock.is_in_stock', $fields ) ) {
+			$product_data['stock']['is_in_stock'] = $product->is_in_stock();
+		}
+		if ( rest_is_field_included( 'stock.stock_quantity', $fields ) ) {
+			$product_data['stock']['stock_quantity'] = $product->get_stock_quantity( 'view' );
+		}
+		if ( rest_is_field_included( 'stock.status', $fields ) ) {
+			$product_data['stock']['stock_status'] = $product->get_stock_status( 'view' );
+		}
+		if ( rest_is_field_included( 'stock.backorders', $fields ) ) {
+			$product_data['stock']['backorders'] = $product->get_backorders( 'view' );
+		}
+		if ( rest_is_field_included( 'stock.backorders_allowed', $fields ) ) {
+			$product_data['stock']['backorders_allowed'] = $product->backorders_allowed();
+		}
+		if ( rest_is_field_included( 'stock.backordered', $fields ) ) {
+			$product_data['stock']['backordered'] = $product->is_on_backorder();
+		}
+		if ( rest_is_field_included( 'stock.low_stock_amount', $fields ) ) {
+			$product_data['stock']['low_stock_amount'] = $product->get_low_stock_amount( 'view' );
 		}
 
 		if ( rest_is_field_included( 'weight', $fields ) ) {
