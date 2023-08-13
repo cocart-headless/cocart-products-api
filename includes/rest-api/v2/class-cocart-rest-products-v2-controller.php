@@ -1719,6 +1719,15 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		$defaults = get_option( 'cocart_settings', array() );
 		$defaults = ! empty( $defaults['products'] ) ? $defaults['products'] : array();
 
+		$params['fields'] = array(
+			'description'       => __( 'Specify each parent field you want to request separated by (,) in the response before the data is fetched.', 'cart-rest-api-for-woocommerce' ),
+			'type'              => 'string',
+			'required'          => false,
+			'sanitize_callback' => 'sanitize_text_field',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+
 		$params['order'] = array(
 			'description'       => __( 'Sort collection by order.', 'cart-rest-api-for-woocommerce' ),
 			'type'              => 'string',
