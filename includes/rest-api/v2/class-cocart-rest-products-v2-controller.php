@@ -561,7 +561,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * @since 3.1.0 Introduced.
 	 * @since 4.0.0 Replaced function `get_product_data` with `get_requested_data`.
 	 *
-	 * @param WC_Product      $product Product instance.
+	 * @param WC_Product      $product Product object.
 	 * @param WP_REST_Request $request Request object.
 	 *
 	 * @return WP_REST_Response
@@ -584,7 +584,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		 * Filter the data for a response.
 		 *
 		 * @param WP_REST_Response $response The response object.
-		 * @param WC_Product       $product  Product instance.
+		 * @param WC_Product       $product  Product object.
 		 * @param WP_REST_Request  $request  Request object.
 		 */
 		return apply_filters( "cocart_prepare_{$this->post_type}_object_v2", $response, $product, $request );
@@ -596,9 +596,9 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access public
 	 *
-	 * @param WC_Product $product    Product instance.
+	 * @param WC_Product $product Product object.
 	 *
-	 * @return array      $variations Returns the variations.
+	 * @return array $variations Returns the variations.
 	 */
 	public function get_variations( $product ) {
 		$variation_ids    = $product->get_children();
@@ -716,7 +716,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access protected
 	 *
-	 * @param WC_Product|WC_Product_Variation $product Product instance.
+	 * @param WC_Product|WC_Product_Variation $product Product object.
 	 *
 	 * @return array $images Array of image data.
 	 */
@@ -784,7 +784,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access protected
 	 *
-	 * @param WC_Product $product Product instance.
+	 * @param WC_Product $product Product object.
 	 *
 	 * @return array $data Product data.
 	 */
@@ -919,7 +919,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @since 4.0.0 Introduced.
 	 *
-	 * @param WC_Product      $product Product instance.
+	 * @param WC_Product      $product Product object.
 	 * @param WP_REST_Request $request Request object.
 	 *
 	 * @return array $data Product data.
@@ -1187,7 +1187,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access protected
 	 *
-	 * @param WC_Variation_Product $product Product instance.
+	 * @param WC_Variation_Product $product Product object.
 	 * @param WP_REST_Request      $request Request object.
 	 *
 	 * @return array $data Product data.
@@ -1234,7 +1234,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access protected
 	 *
-	 * @param WC_Product $product  Product instance.
+	 * @param WC_Product $product  Product object.
 	 * @param string     $taxonomy Taxonomy slug.
 	 *
 	 * @return array $terms Taxonomy terms.
@@ -1296,7 +1296,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access protected
 	 *
-	 * @param WC_Product|WC_Product_Variation $product Product instance.
+	 * @param WC_Product|WC_Product_Variation $product Product object.
 	 *
 	 * @return array $attributes Attributes data.
 	 */
@@ -1353,8 +1353,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access public
 	 *
-	 * @param WC_Product $product Product Object.
-	 * @param string     $type Type of products to return.
+	 * @param WC_Product $product Product object.
+	 * @param string     $type    Type of products to return.
 	 *
 	 * @return array $connected_products Product data.
 	 */
@@ -1453,7 +1453,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access public
 	 *
-	 * @param WC_Product $product Product Object.
+	 * @param WC_Product $product Product object.
 	 * @param string     $type    Product type.
 	 *
 	 * @return string $rest_url REST URL for adding product to the cart.
@@ -1530,7 +1530,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access public
 	 *
-	 * @param WC_Product $product Product object.
+	 * @param WC_Product $product          Product object.
 	 * @param string     $tax_display_mode If returned prices are incl or excl of tax.
 	 *
 	 * @return array
