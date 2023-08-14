@@ -1663,6 +1663,28 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		$schema     = $this->get_public_item_schema();
 		$properties = isset( $schema['properties'] ) ? $schema['properties'] : array();
 
+		$additional_fields = $this->get_additional_fields();
+
+		foreach ( $additional_fields as $field_name => $field_options ) {
+			/*
+			* For back-compat, include any field with an empty schema
+			* because it won't be present in $this->get_item_schema().
+			*/
+			if ( is_null( $field_options['schema'] ) ) {
+				$properties[ $field_name ] = $field_options;
+			}
+		}
+
+		// Exclude fields that specify a different context than the request context.
+		$context = $request['context'];
+		if ( $context ) {
+			foreach ( $properties as $name => $options ) {
+				if ( ! empty( $options['context'] ) && ! in_array( $context, $options['context'], true ) ) {
+					unset( $properties[ $name ] );
+				}
+			}
+		}
+
 		$fields = array_unique( array_keys( $properties ) );
 
 		if ( ! isset( $request['fields'] ) ) {
