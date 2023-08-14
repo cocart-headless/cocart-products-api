@@ -744,7 +744,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 
 			// Get each image size of the attachment.
 			foreach ( $attachment_sizes as $size ) {
-				$attachments[ $size ] = current( wp_get_attachment_image_src( $attachment_id, $size ) );
+				$attachments[ $size ] = wc_placeholder_img_src( $size );
 			}
 
 			$featured = $position === 0 ? true : false; // phpcs:ignore WordPress.PHP.YodaConditions.NotYoda
