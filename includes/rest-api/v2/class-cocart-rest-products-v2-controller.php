@@ -1749,6 +1749,16 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		// Trim off outside whitespace from the comma delimited list.
 		$requested_fields = array_map( 'trim', $requested_fields );
 
+		// Always persist 'id', because it can be needed for add_additional_fields_to_object().
+		if ( in_array( 'id', $fields, true ) ) {
+			$requested_fields[] = 'id';
+		}
+
+		// Always persist 'parent_id' if variations is included without parent product, because it can be needed for add_additional_fields_to_object().
+		if ( in_array( 'parent_id', $fields, true ) && $request['include_variations'] ) {
+			$requested_fields[] = 'parent_id';
+		}
+
 		// Return the list of all requested fields which appear in the schema.
 		return array_reduce(
 			$requested_fields,
