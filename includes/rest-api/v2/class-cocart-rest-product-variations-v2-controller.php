@@ -162,6 +162,12 @@ class CoCart_REST_Product_Variations_V2_Controller extends CoCart_Product_Variat
 		$data     = $this->prepare_object_for_response( $product, $request );
 		$response = rest_ensure_response( $data );
 
+		// Add timestamp of response.
+		$response->header( 'CoCart-Timestamp', time() );
+
+		// Add version of CoCart.
+		$response->header( 'CoCart-Version', COCART_VERSION );
+
 		return $response;
 	} // END get_item()
 

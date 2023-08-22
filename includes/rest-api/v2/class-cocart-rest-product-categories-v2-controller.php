@@ -83,6 +83,12 @@ class CoCart_REST_Product_Categories_V2_Controller extends CoCart_Product_Catego
 
 		$response = rest_ensure_response( $data );
 
+		// Add timestamp of response.
+		$response->header( 'CoCart-Timestamp', time() );
+
+		// Add version of CoCart.
+		$response->header( 'CoCart-Version', COCART_VERSION );
+
 		$response->add_links( $this->prepare_links( $item, $request ) );
 
 		/**

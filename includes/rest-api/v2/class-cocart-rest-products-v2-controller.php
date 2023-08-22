@@ -120,6 +120,12 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		$response->header( 'X-WP-Total', $query_results['total'] );
 		$response->header( 'X-WP-TotalPages', (int) $max_pages );
 
+		// Add timestamp of response.
+		$response->header( 'CoCart-Timestamp', time() );
+
+		// Add version of CoCart.
+		$response->header( 'CoCart-Version', COCART_VERSION );
+
 		$base          = $this->rest_base;
 		$attrib_prefix = '(?P<';
 
