@@ -4,7 +4,7 @@
  *
  * @author  Sébastien Dumont
  * @package CoCart\Products API
- * @since   2.8.1
+ * @since   2.8.1 Introduced.
  * @version 4.0.0
  */
 

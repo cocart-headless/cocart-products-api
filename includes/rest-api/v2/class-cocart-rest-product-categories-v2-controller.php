@@ -4,7 +4,7 @@
  *
  * @author  Sébastien Dumont
  * @package CoCart\RESTAPI\Products\v2
- * @since   3.1.0
+ * @since   3.1.0 Introduced.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -32,6 +32,9 @@ class CoCart_REST_Product_Categories_V2_Controller extends CoCart_Product_Catego
 	 * Prepare a single product category output for response.
 	 *
 	 * @access public
+	 *
+	 * @since 3.1.0 Introduced.
+	 * @since 4.0.0 Added CoCart headers to response.
 	 *
 	 * @param WP_Term         $item    Term object.
 	 * @param WP_REST_Request $request Request instance.
@@ -95,6 +98,8 @@ class CoCart_REST_Product_Categories_V2_Controller extends CoCart_Product_Catego
 		 * Filter a term item returned from the API.
 		 *
 		 * Allows modification of the term data right before it is returned.
+		 *
+		 * @since 3.1.0 Introduced.
 		 *
 		 * @param WP_REST_Response $response  The response object.
 		 * @param object           $item      The original term object.

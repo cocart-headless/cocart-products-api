@@ -4,7 +4,7 @@
  *
  * @author  Sébastien Dumont
  * @package CoCart\RESTAPI\Products\v2
- * @since   3.1.0
+ * @since   3.1.0 Introduced.
  * @version 4.0.0
  */
 
@@ -89,6 +89,8 @@ class CoCart_REST_Product_Variations_V2_Controller extends CoCart_Product_Variat
 	 *
 	 * @access public
 	 *
+	 * @since 3.1.0 Introduced.
+	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_Error|bool
@@ -120,6 +122,8 @@ class CoCart_REST_Product_Variations_V2_Controller extends CoCart_Product_Variat
 	 *
 	 * @access public
 	 *
+	 * @since 3.1.0 Introduced.
+	 *
 	 * @param WC_Product      $product Product instance.
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -140,6 +144,8 @@ class CoCart_REST_Product_Variations_V2_Controller extends CoCart_Product_Variat
 		 * The dynamic portion of the hook name, $this->post_type,
 		 * refers to product type being prepared for the response.
 		 *
+		 * @since 3.1.0 Introduced.
+		 *
 		 * @param WP_REST_Response $response The response object.
 		 * @param WC_Product       $product Product object.
 		 * @param WP_REST_Request  $request Full details about the request.
@@ -151,6 +157,9 @@ class CoCart_REST_Product_Variations_V2_Controller extends CoCart_Product_Variat
 	 * Get a single item.
 	 *
 	 * @access public
+	 *
+	 * @since 3.1.0 Introduced.
+	 * @since 4.0.0 Added CoCart headers to response.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -175,6 +184,8 @@ class CoCart_REST_Product_Variations_V2_Controller extends CoCart_Product_Variat
 	 * Prepare links for the request.
 	 *
 	 * @access protected
+	 *
+	 * @since 3.1.0 Introduced.
 	 *
 	 * @param WC_Product      $product Product object.
 	 * @param WP_REST_Request $request Request object.

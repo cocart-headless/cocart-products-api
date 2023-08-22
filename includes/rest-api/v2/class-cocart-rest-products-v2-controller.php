@@ -4,7 +4,7 @@
  *
  * @author  Sébastien Dumont
  * @package CoCart\RESTAPI\Products\v2
- * @since   3.1.0
+ * @since   3.1.0 Introduced.
  * @version 4.0.0
  */
 
@@ -589,6 +589,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		/**
 		 * Filter the data for a response.
 		 *
+		 * @since 3.1.0 Introduced.
+		 *
 		 * @param WP_REST_Response $response The response object.
 		 * @param WC_Product       $product  Product object.
 		 * @param WP_REST_Request  $request  Request object.
@@ -601,6 +603,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * for developers with their UI/UX.
 	 *
 	 * @access public
+	 *
+	 * @since 3.1.0 Introduced.
 	 *
 	 * @param WC_Product $product Product object.
 	 *
@@ -678,6 +682,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access public
 	 *
+	 * @since 3.1.0 Introduced.
+	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response
@@ -721,6 +727,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * Get the images for a product or product variation.
 	 *
 	 * @access protected
+	 *
+	 * @since 3.1.0 Introduced.
 	 *
 	 * @param WC_Product|WC_Product_Variation $product Product object.
 	 *
@@ -789,6 +797,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * Get product data.
 	 *
 	 * @access protected
+	 *
+	 * @since 3.1.0 Introduced.
 	 *
 	 * @param WC_Product $product Product object.
 	 *
@@ -1193,6 +1203,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access protected
 	 *
+	 * @since 3.1.0 Introduced.
+	 *
 	 * @param WC_Variation_Product $product Product object.
 	 * @param WP_REST_Request      $request Request object.
 	 *
@@ -1240,6 +1252,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access protected
 	 *
+	 * @since 3.1.0 Introduced.
+	 *
 	 * @param WC_Product $product  Product object.
 	 * @param string     $taxonomy Taxonomy slug.
 	 *
@@ -1264,6 +1278,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * Get attribute options.
 	 *
 	 * @access protected
+	 *
+	 * @since 3.1.0 Introduced.
 	 *
 	 * @param int   $product_id Product ID.
 	 * @param array $attribute  Attribute data.
@@ -1301,6 +1317,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * Get the attributes for a product or product variation.
 	 *
 	 * @access protected
+	 *
+	 * @since 3.1.0 Introduced.
 	 *
 	 * @param WC_Product|WC_Product_Variation $product Product object.
 	 *
@@ -1359,6 +1377,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access public
 	 *
+	 * @since 3.1.0 Introduced.
+	 *
 	 * @param WC_Product $product Product object.
 	 * @param string     $type    Type of products to return.
 	 *
@@ -1413,6 +1433,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access public
 	 *
+	 * @since 3.1.0 Introduced.
+	 *
 	 * @param int    $id       Product ID or Taxonomy ID.
 	 * @param string $taxonomy Taxonomy type.
 	 *
@@ -1440,6 +1462,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access public
 	 *
+	 * @since 3.1.0 Introduced.
+	 *
 	 * @param array $ids Product ID's.
 	 *
 	 * @return array $urls Array of REST URLs.
@@ -1458,6 +1482,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * Returns the REST URL for adding product to the cart.
 	 *
 	 * @access public
+	 *
+	 * @since 3.1.0 Introduced.
 	 *
 	 * @param WC_Product $product Product object.
 	 * @param string     $type    Product type.
@@ -1509,6 +1535,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access protected
 	 *
+	 * @since 3.1.0 Introduced.
+	 *
 	 * @param string $tax_display_mode Provided tax display mode.
 	 *
 	 * @return string Valid tax display mode.
@@ -1523,6 +1551,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access protected
 	 *
+	 * @since 3.1.0 Introduced.
+	 *
 	 * @param string $tax_display_mode If returned prices are incl or excl of tax.
 	 *
 	 * @return string Function name.
@@ -1535,6 +1565,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * Returns the price range for variable or grouped product.
 	 *
 	 * @access public
+	 *
+	 * @since 3.1.0 Introduced.
 	 *
 	 * @param WC_Product $product          Product object.
 	 * @param string     $tax_display_mode If returned prices are incl or excl of tax.
@@ -1663,7 +1695,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
-	 * @return string Fields to be included in the response.
+	 * @return string[] Fields to be included in the response.
 	 */
 	public function get_fields_for_response( $request ) {
 		$schema     = $this->get_public_item_schema();
@@ -1782,6 +1814,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * Retrieves the item’s schema, conforming to JSON Schema.
 	 *
 	 * @access public
+	 *
+	 * @since 3.1.0 Introduced.
 	 *
 	 * @return array Product schema data.
 	 */
@@ -2811,6 +2845,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * for the product archive.
 	 *
 	 * @access public
+	 *
+	 * @since 3.1.0 Introduced.
 	 *
 	 * @return array Products archive schema data.
 	 */

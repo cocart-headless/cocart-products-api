@@ -4,7 +4,7 @@
  *
  * @author  Sébastien Dumont
  * @package CoCart\RESTAPI\Products\v2
- * @since   3.1.0
+ * @since   3.1.0 Introduced.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
