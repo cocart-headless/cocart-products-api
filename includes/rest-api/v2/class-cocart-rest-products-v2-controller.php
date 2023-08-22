@@ -1522,6 +1522,16 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 				$rest_url = ''; // Return nothing for these product types.
 				break;
 			default:
+				/**
+				 * Filters the REST URL shortcut for adding the product to cart.
+				 *
+				 * @since 3.1.0 Introduced.
+				 *
+				 * @param string     $rest_url REST URL for adding product to the cart.
+				 * @param WC_Product $product  Product object.
+				 * @param string     $type     Product type
+				 * @param int        $id       Product ID
+				 */
 				$rest_url = apply_filters( 'cocart_products_add_to_cart_rest_url', $rest_url, $product, $type, $id );
 				break;
 		}
@@ -1786,7 +1796,6 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 			'sanitize_callback' => 'sanitize_text_field',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
-
 
 		$params['order'] = array(
 			'description'       => __( 'Sort collection by order.', 'cart-rest-api-for-woocommerce' ),
