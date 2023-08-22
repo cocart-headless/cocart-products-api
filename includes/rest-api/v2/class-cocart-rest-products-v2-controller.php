@@ -1773,14 +1773,13 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	} // END get_collection_params()
 
 	/**
-	 * Retrieves the item schema for display / public consumption purposes
-	 * of an individual product.
+	 * Retrieves the item’s schema, conforming to JSON Schema.
 	 *
 	 * @access public
 	 *
 	 * @return array Product schema data.
 	 */
-	public function get_public_item_schema() {
+	public function get_item_schema() {
 		$weight_unit    = get_option( 'woocommerce_weight_unit' );
 		$dimension_unit = get_option( 'woocommerce_dimension_unit' );
 
@@ -2799,7 +2798,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		}
 
 		return $this->add_additional_fields_schema( $schema );
-	} // END get_public_item_schema()
+	} // END get_item_schema()
 
 	/**
 	 * Retrieves the item's schema for display / public consumption purposes
@@ -2810,7 +2809,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * @return array Products archive schema data.
 	 */
 	public function get_public_items_schema() {
-		$product_schema = $this->get_public_item_schema();
+		$product_schema = $this->get_item_schema();
 
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
