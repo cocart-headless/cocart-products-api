@@ -969,10 +969,11 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 			);
 		}
 
-		$schema         = $this->get_public_item_schema();
-		$default_fields = Fields::get_response_from_fields( $request );
-		$fields         = Fields::get_fields_for_request( $request, $schema, $default_fields );
-		$exclude_fields = Fields::get_excluded_fields_for_response( $request, $schema );
+		$schema            = $this->get_public_item_schema();
+		$default_fields    = Fields::get_response_from_fields( $request );
+		$additional_fields = $this->get_additional_fields();
+		$fields            = Fields::get_fields_for_request( $request, $schema, $default_fields, $additional_fields );
+		$exclude_fields    = Fields::get_excluded_fields_for_response( $request, $schema );
 
 		// Product data response container.
 		$product_data = array();
