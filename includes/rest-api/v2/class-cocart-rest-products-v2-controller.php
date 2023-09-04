@@ -12,6 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use CoCart\Utilities\Fields;
+
 /**
  * Controller for returning products via the REST API (API v2).
  *
@@ -967,48 +969,51 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 			);
 		}
 
-		$fields = $this->get_fields_for_response( $request );
+		$schema         = $this->get_public_item_schema();
+		$default_fields = Fields::get_response_from_fields( $request );
+		$fields         = Fields::get_fields_for_request( $request, $schema, $default_fields );
+		$exclude_fields = Fields::get_excluded_fields_for_response( $request, $schema );
 
 		// Product data response container.
 		$product_data = array();
 
-		if ( rest_is_field_included( 'id', $fields ) ) {
+		if ( cocart_is_field_included( 'id', $fields, $exclude_fields ) ) {
 			$product_data['id'] = $product->get_id();
 		}
 
-		if ( rest_is_field_included( 'parent_id', $fields ) ) {
+		if ( cocart_is_field_included( 'parent_id', $fields, $exclude_fields ) ) {
 			$product_data['parent_id'] = $product->get_parent_id( 'view' );
 		}
 
-		if ( rest_is_field_included( 'name', $fields ) ) {
+		if ( cocart_is_field_included( 'name', $fields, $exclude_fields ) ) {
 			$product_data['name'] = $product->get_name( 'view' );
 		}
 
-		if ( rest_is_field_included( 'type', $fields ) ) {
+		if ( cocart_is_field_included( 'type', $fields, $exclude_fields ) ) {
 			$product_data['type'] = $type;
 		}
 
-		if ( rest_is_field_included( 'slug', $fields ) ) {
+		if ( cocart_is_field_included( 'slug', $fields, $exclude_fields ) ) {
 			$product_data['slug'] = $product->get_slug( 'view' );
 		}
 
-		if ( rest_is_field_included( 'permalink', $fields ) ) {
+		if ( cocart_is_field_included( 'permalink', $fields, $exclude_fields ) ) {
 			$product_data['permalink'] = cocart_get_permalink( $product->get_permalink() );
 		}
 
-		if ( rest_is_field_included( 'sku', $fields ) ) {
+		if ( cocart_is_field_included( 'sku', $fields, $exclude_fields ) ) {
 			$product_data['sku'] = $product->get_sku( 'view' );
 		}
 
-		if ( rest_is_field_included( 'description', $fields ) ) {
+		if ( cocart_is_field_included( 'description', $fields, $exclude_fields ) ) {
 			$product_data['description'] = $product->get_description( 'view' );
 		}
 
-		if ( rest_is_field_included( 'short_description', $fields ) ) {
+		if ( cocart_is_field_included( 'short_description', $fields, $exclude_fields ) ) {
 			$product_data['short_description'] = $product->get_short_description( 'view' );
 		}
 
-		if ( rest_is_field_included( 'dates', $fields ) ) {
+		if ( cocart_is_field_included( 'dates', $fields, $exclude_fields ) ) {
 			$date_created  = $product->get_date_created( 'view' );
 			$date_modified = $product->get_date_modified( 'view' );
 
@@ -1020,11 +1025,11 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 			);
 		}
 
-		if ( rest_is_field_included( 'featured', $fields ) ) {
+		if ( cocart_is_field_included( 'featured', $fields, $exclude_fields ) ) {
 			$product_data['featured'] = $product->is_featured();
 		}
 
-		if ( rest_is_field_included( 'prices', $fields ) ) {
+		if ( cocart_is_field_included( 'prices', $fields, $exclude_fields ) ) {
 			$date_on_sale_from = $product->get_date_on_sale_from( 'view' );
 			$date_on_sale_to   = $product->get_date_on_sale_to( 'view' );
 
@@ -1044,105 +1049,105 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 			);
 		}
 
-		if ( rest_is_field_included( 'hidden_conditions', $fields ) ) {
+		if ( cocart_is_field_included( 'hidden_conditions', $fields, $exclude_fields ) ) {
 			$product_data['hidden_conditions'] = array();
 		}
-		if ( rest_is_field_included( 'hidden_conditions.virtual', $fields ) ) {
+		if ( cocart_is_field_included( 'hidden_conditions.virtual', $fields, $exclude_fields ) ) {
 			$product_data['hidden_conditions']['virtual'] = $product->is_virtual();
 		}
-		if ( rest_is_field_included( 'hidden_conditions.downloadable', $fields ) ) {
+		if ( cocart_is_field_included( 'hidden_conditions.downloadable', $fields, $exclude_fields ) ) {
 			$product_data['hidden_conditions']['downloadable'] = $product->is_downloadable();
 		}
-		if ( rest_is_field_included( 'hidden_conditions.manage_stock', $fields ) ) {
+		if ( cocart_is_field_included( 'hidden_conditions.manage_stock', $fields, $exclude_fields ) ) {
 			$product_data['hidden_conditions']['manage_stock'] = $product->managing_stock();
 		}
-		if ( rest_is_field_included( 'hidden_conditions.sold_individually', $fields ) ) {
+		if ( cocart_is_field_included( 'hidden_conditions.sold_individually', $fields, $exclude_fields ) ) {
 			$product_data['hidden_conditions']['sold_individually'] = $product->is_sold_individually();
 		}
-		if ( rest_is_field_included( 'hidden_conditions.reviews_allowed', $fields ) ) {
+		if ( cocart_is_field_included( 'hidden_conditions.reviews_allowed', $fields, $exclude_fields ) ) {
 			$product_data['hidden_conditions']['reviews_allowed'] = $product->get_reviews_allowed( 'view' );
 		}
-		if ( rest_is_field_included( 'hidden_conditions.shipping_required', $fields ) ) {
+		if ( cocart_is_field_included( 'hidden_conditions.shipping_required', $fields, $exclude_fields ) ) {
 			$product_data['hidden_conditions']['shipping_required'] = $product->needs_shipping();
 		}
 
-		if ( rest_is_field_included( 'average_rating', $fields ) ) {
+		if ( cocart_is_field_included( 'average_rating', $fields, $exclude_fields ) ) {
 			$product_data['average_rating'] = $average;
 		}
 
-		if ( rest_is_field_included( 'review_count', $fields ) ) {
+		if ( cocart_is_field_included( 'review_count', $fields, $exclude_fields ) ) {
 			$product_data['review_count'] = $product->get_review_count( 'view' );
 		}
 
-		if ( rest_is_field_included( 'rating_count', $fields ) ) {
+		if ( cocart_is_field_included( 'rating_count', $fields, $exclude_fields ) ) {
 			$product_data['rating_count'] = $rating_count;
 		}
 
-		if ( rest_is_field_included( 'rated_out_of', $fields ) ) {
+		if ( cocart_is_field_included( 'rated_out_of', $fields, $exclude_fields ) ) {
 			$product_data['rated_out_of'] = html_entity_decode( wp_strip_all_tags( wc_get_rating_html( $average, $rating_count ) ) );
 		}
 
-		if ( rest_is_field_included( 'images', $fields ) ) {
+		if ( cocart_is_field_included( 'images', $fields, $exclude_fields ) ) {
 			$product_data['images'] = $this->get_images( $product );
 		}
 
-		if ( rest_is_field_included( 'categories', $fields ) ) {
+		if ( cocart_is_field_included( 'categories', $fields, $exclude_fields ) ) {
 			$product_data['categories'] = $this->get_taxonomy_terms( $product );
 		}
 
-		if ( rest_is_field_included( 'tags', $fields ) ) {
+		if ( cocart_is_field_included( 'tags', $fields, $exclude_fields ) ) {
 			$product_data['tags'] = $this->get_taxonomy_terms( $product, 'tag' );
 		}
 
-		if ( rest_is_field_included( 'attributes', $fields ) ) {
+		if ( cocart_is_field_included( 'attributes', $fields, $exclude_fields ) ) {
 			$product_data['attributes'] = $this->get_attributes( $product );
 		}
 
-		if ( rest_is_field_included( 'default_attributes', $fields ) ) {
+		if ( cocart_is_field_included( 'default_attributes', $fields, $exclude_fields ) ) {
 			$product_data['default_attributes'] = $this->get_default_attributes( $product );
 		}
 
-		if ( rest_is_field_included( 'variations', $fields ) ) {
+		if ( cocart_is_field_included( 'variations', $fields, $exclude_fields ) ) {
 			$product_data['variations'] = ( $product->is_type( 'variable' ) && $product->has_child() ) || ( $product->is_type( 'variable-subscription' ) && $product->has_child() ) ? $this->get_variations( $product ) : array();
 		}
 
-		if ( rest_is_field_included( 'grouped_products', $fields ) ) {
+		if ( cocart_is_field_included( 'grouped_products', $fields, $exclude_fields ) ) {
 			$product_data['grouped_products'] = ( $product->is_type( 'grouped' ) && $product->has_child() ) ? $product->get_children() : array();
 		}
 
-		if ( rest_is_field_included( 'stock', $fields ) ) {
+		if ( cocart_is_field_included( 'stock', $fields, $exclude_fields ) ) {
 			$product_data['stock'] = array();
 		}
-		if ( rest_is_field_included( 'stock.is_in_stock', $fields ) ) {
+		if ( cocart_is_field_included( 'stock.is_in_stock', $fields, $exclude_fields ) ) {
 			$product_data['stock']['is_in_stock'] = $product->is_in_stock();
 		}
-		if ( rest_is_field_included( 'stock.stock_quantity', $fields ) ) {
+		if ( cocart_is_field_included( 'stock.stock_quantity', $fields, $exclude_fields ) ) {
 			$product_data['stock']['stock_quantity'] = $product->get_stock_quantity( 'view' );
 		}
-		if ( rest_is_field_included( 'stock.status', $fields ) ) {
+		if ( cocart_is_field_included( 'stock.status', $fields, $exclude_fields ) ) {
 			$product_data['stock']['stock_status'] = $product->get_stock_status( 'view' );
 		}
-		if ( rest_is_field_included( 'stock.backorders', $fields ) ) {
+		if ( cocart_is_field_included( 'stock.backorders', $fields, $exclude_fields ) ) {
 			$product_data['stock']['backorders'] = $product->get_backorders( 'view' );
 		}
-		if ( rest_is_field_included( 'stock.backorders_allowed', $fields ) ) {
+		if ( cocart_is_field_included( 'stock.backorders_allowed', $fields, $exclude_fields ) ) {
 			$product_data['stock']['backorders_allowed'] = $product->backorders_allowed();
 		}
-		if ( rest_is_field_included( 'stock.backordered', $fields ) ) {
+		if ( cocart_is_field_included( 'stock.backordered', $fields, $exclude_fields ) ) {
 			$product_data['stock']['backordered'] = $product->is_on_backorder();
 		}
-		if ( rest_is_field_included( 'stock.low_stock_amount', $fields ) ) {
+		if ( cocart_is_field_included( 'stock.low_stock_amount', $fields, $exclude_fields ) ) {
 			$product_data['stock']['low_stock_amount'] = $product->get_low_stock_amount( 'view' );
 		}
 
-		if ( rest_is_field_included( 'weight', $fields ) ) {
+		if ( cocart_is_field_included( 'weight', $fields, $exclude_fields ) ) {
 			$product_data['weight'] = array(
 				'value' => $product->get_weight( 'view' ),
 				'unit'  => get_option( 'woocommerce_weight_unit' ),
 			);
 		}
 
-		if ( rest_is_field_included( 'dimensions', $fields ) ) {
+		if ( cocart_is_field_included( 'dimensions', $fields, $exclude_fields ) ) {
 			$product_data['dimensions'] = array(
 				'length' => $product->get_length( 'view' ),
 				'width'  => $product->get_width( 'view' ),
@@ -1151,47 +1156,58 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 			);
 		}
 
-		if ( rest_is_field_included( 'reviews', $fields ) ) {
+		if ( cocart_is_field_included( 'reviews', $fields, $exclude_fields ) ) {
 			// Add review data to products if requested.
 			$product_data['reviews'] = isset( $request['show_reviews'] ) ? $this->get_reviews( $product ) : array();
 		}
 
-		if ( rest_is_field_included( 'related', $fields ) ) {
+		if ( cocart_is_field_included( 'related', $fields, $exclude_fields ) ) {
 			$product_data['related'] = $this->get_connected_products( $product, 'related' );
 		}
 
-		if ( rest_is_field_included( 'upsells', $fields ) ) {
+		if ( cocart_is_field_included( 'upsells', $fields, $exclude_fields ) ) {
 			$product_data['upsells'] = $this->get_connected_products( $product, 'upsells' );
 		}
 
-		if ( rest_is_field_included( 'cross_sells', $fields ) ) {
+		if ( cocart_is_field_included( 'cross_sells', $fields, $exclude_fields ) ) {
 			$product_data['cross_sells'] = $this->get_connected_products( $product, 'cross_sells' );
 		}
 
-		if ( rest_is_field_included( 'total_sales', $fields ) ) {
+		if ( cocart_is_field_included( 'total_sales', $fields, $exclude_fields ) ) {
 			$product_data['total_sales'] = $product->get_total_sales( 'view' );
 		}
 
-		if ( rest_is_field_included( 'external_url', $fields ) ) {
+		if ( cocart_is_field_included( 'external_url', $fields, $exclude_fields ) ) {
 			$product_data['external_url'] = $product->is_type( 'external' ) ? $product->get_product_url( 'view' ) : '';
 		}
 
-		if ( rest_is_field_included( 'button_text', $fields ) ) {
+		if ( cocart_is_field_included( 'button_text', $fields, $exclude_fields ) ) {
 			$product_data['button_text'] = $product->is_type( 'external' ) ? $product->get_button_text( 'view' ) : '';
 		}
 
-		if ( rest_is_field_included( 'add_to_cart', $fields ) ) {
-			$product_data['add_to_cart'] = array(
-				'text'              => $product->add_to_cart_text(),
-				'description'       => $product->add_to_cart_description(),
-				'has_options'       => $product->has_options(),
-				'is_purchasable'    => $product->is_purchasable(),
-				'purchase_quantity' => $purchase_quantity,
-				'rest_url'          => $this->add_to_cart_rest_url( $product, $type ),
-			);
+		if ( cocart_is_field_included( 'add_to_cart', $fields, $exclude_fields ) ) {
+			$product_data['add_to_cart'] = array();
+		}
+		if ( cocart_is_field_included( 'add_to_cart.text', $fields, $exclude_fields ) ) {
+			$product_data['add_to_cart']['text'] = $product->add_to_cart_text();
+		}
+		if ( cocart_is_field_included( 'add_to_cart.description', $fields, $exclude_fields ) ) {
+			$product_data['add_to_cart']['description'] = $product->add_to_cart_description();
+		}
+		if ( cocart_is_field_included( 'add_to_cart.has_options', $fields, $exclude_fields ) ) {
+			$product_data['add_to_cart']['has_options'] = $product->has_options();
+		}
+		if ( cocart_is_field_included( 'add_to_cart.is_purchasable', $fields, $exclude_fields ) ) {
+			$product_data['add_to_cart']['is_purchasable'] = $product->is_purchasable();
+		}
+		if ( cocart_is_field_included( 'add_to_cart.purchase_quantity', $fields, $exclude_fields ) ) {
+			$product_data['add_to_cart']['purchase_quantity'] = $purchase_quantity;
+		}
+		if ( cocart_is_field_included( 'add_to_cart.rest_url', $fields, $exclude_fields ) ) {
+			$product_data['add_to_cart']['rest_url'] = $this->add_to_cart_rest_url( $product, $type );
 		}
 
-		if ( rest_is_field_included( 'meta_data', $fields ) ) {
+		if ( cocart_is_field_included( 'meta_data', $fields, $exclude_fields ) ) {
 			$product_data['meta_data'] = $this->get_meta_data( $product );
 		}
 
@@ -1695,96 +1711,6 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	} // END get_meta_data()
 
 	/**
-	 * Gets an array of fields to be included on the response.
-	 *
-	 * Included fields are based on item schema and `fields=` request argument.
-	 *
-	 * @access public
-	 *
-	 * @since 4.0.0 Introduced.
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 *
-	 * @return string[] Fields to be included in the response.
-	 */
-	public function get_fields_for_response( $request ) {
-		$schema     = $this->get_public_item_schema();
-		$properties = isset( $schema['properties'] ) ? $schema['properties'] : array();
-
-		$additional_fields = $this->get_additional_fields();
-
-		foreach ( $additional_fields as $field_name => $field_options ) {
-			/*
-			* For back-compat, include any field with an empty schema
-			* because it won't be present in $this->get_item_schema().
-			*/
-			if ( is_null( $field_options['schema'] ) ) {
-				$properties[ $field_name ] = $field_options;
-			}
-		}
-
-		// Exclude fields that specify a different context than the request context.
-		$context = $request['context'];
-		if ( $context ) {
-			foreach ( $properties as $name => $options ) {
-				if ( ! empty( $options['context'] ) && ! in_array( $context, $options['context'], true ) ) {
-					unset( $properties[ $name ] );
-				}
-			}
-		}
-
-		$fields = array_unique( array_keys( $properties ) );
-
-		if ( ! isset( $request['fields'] ) ) {
-			return $fields;
-		}
-
-		$requested_fields = wp_parse_list( $request['fields'] );
-
-		// Return all fields if no fields specified.
-		if ( 0 === count( $requested_fields ) ) {
-			return $fields;
-		}
-
-		// Trim off outside whitespace from the comma delimited list.
-		$requested_fields = array_map( 'trim', $requested_fields );
-
-		// Always persist 'id', because it can be needed for add_additional_fields_to_object().
-		if ( in_array( 'id', $fields, true ) ) {
-			$requested_fields[] = 'id';
-		}
-
-		// Always persist 'parent_id' if variations is included without parent product, because it can be needed for add_additional_fields_to_object().
-		if ( in_array( 'parent_id', $fields, true ) && $request['include_variations'] ) {
-			$requested_fields[] = 'parent_id';
-		}
-
-		// Return the list of all requested fields which appear in the schema.
-		return array_reduce(
-			$requested_fields,
-			static function( $response_fields, $field ) use ( $fields ) {
-				if ( in_array( $field, $fields, true ) ) {
-					$response_fields[] = $field;
-
-					return $response_fields;
-				}
-
-				// Check for nested fields if $field is not a direct match.
-				$nested_fields = explode( '.', $field );
-
-				// A nested field is included so long as its top-level property
-				// is present in the schema.
-				if ( in_array( $nested_fields[0], $fields, true ) ) {
-					$response_fields[] = $field;
-				}
-
-				return $response_fields;
-			},
-			array()
-		);
-	} // END get_fields_for_response()
-
-	/**
 	 * Get the query params for collections of products.
 	 *
 	 * @access public
@@ -1803,6 +1729,28 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 			'description'       => __( 'Specify each parent field you want to request separated by (,) in the response before the data is fetched.', 'cart-rest-api-for-woocommerce' ),
 			'type'              => 'string',
 			'required'          => false,
+			'sanitize_callback' => 'sanitize_text_field',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		$params['exclude_fields'] = array(
+			'description'       => __( 'Specify each parent field you want to exclude separated by (,) in the response before the data is fetched.', 'cart-rest-api-for-woocommerce' ),
+			'type'              => 'string',
+			'required'          => false,
+			'sanitize_callback' => 'sanitize_text_field',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		$params['response'] = array(
+			'description'       => __( 'Alternative to setting individual fields, set the default response.', 'cart-rest-api-for-woocommerce' ),
+			'default'           => ! empty( $defaults['cart_response'] ) ? $defaults['cart_response'] : 'default',
+			'type'              => 'string',
+			'required'          => false,
+			'enum'              => array(
+				'default',
+				'quick_browse',
+				'quick_view'
+			),
 			'sanitize_callback' => 'sanitize_text_field',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
