@@ -1745,7 +1745,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 
 		$params['response'] = array(
 			'description'       => __( 'Alternative to setting individual fields, set the default response.', 'cart-rest-api-for-woocommerce' ),
-			'default'           => ! empty( $defaults['cart_response'] ) ? $defaults['cart_response'] : 'default',
+			'default'           => ! empty( $defaults['products_response'] ) ? $defaults['products_response'] : 'default',
 			'type'              => 'string',
 			'required'          => false,
 			'enum'              => array(
