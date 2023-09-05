@@ -48,6 +48,35 @@ class ProductsAPISettings extends Page {
 		);
 
 		$settings[] = array(
+			'title'    => esc_html__( 'Default Response', 'cart-rest-api-for-woocommerce' ),
+			'id'       => $this->id . '_response',
+			'desc'     => __( 'Alternative to setting individual fields, set the default products response.', 'cart-rest-api-for-woocommerce' ),
+			'type'     => 'select',
+			'default'  => 'default',
+			'options'  => array(
+				'default'      => __( 'Default - All fields', 'cart-rest-api-for-woocommerce' ),
+				'quick_browse' => __( 'Quick Browse', 'cart-rest-api-for-woocommerce' ),
+				'quick_view'   => __( 'Quick View', 'cart-rest-api-for-woocommerce' ),
+			),
+			'css'      => 'min-width:10em;',
+			'autoload' => true,
+		);
+
+		$settings[] = array(
+			'title'    => esc_html__( 'Price Format', 'cart-rest-api-for-woocommerce' ),
+			'id'       => $this->id . '_prices',
+			'desc'     => __( 'Return the price values in the format you prefer.', 'cart-rest-api-for-woocommerce' ),
+			'type'     => 'select',
+			'default'  => '',
+			'options'  => array(
+				'raw'       => __( 'Raw', 'cart-rest-api-for-woocommerce' ),
+				'formatted' => __( 'Formatted', 'cart-rest-api-for-woocommerce' ),
+			),
+			'css'      => 'min-width:10em;',
+			'autoload' => true,
+		);
+
+		$settings[] = array(
 			'title'    => esc_html__( 'Catalog visibility', 'cart-rest-api-for-woocommerce' ),
 			'id'       => 'catalog_visibility',
 			'type'     => 'select',
