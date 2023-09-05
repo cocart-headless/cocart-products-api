@@ -1757,6 +1757,19 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
+		$params['prices'] = array(
+			'description'       => __( 'Return the price values in the format you prefer.', 'cart-rest-api-for-woocommerce' ),
+			'default'           => ! empty( $defaults['products_prices'] ) ? $defaults['products_prices'] : 'raw',
+			'type'              => 'string',
+			'required'          => false,
+			'enum'              => array(
+				'raw',
+				'formatted'
+			),
+			'sanitize_callback' => 'sanitize_text_field',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
 		$params['order'] = array(
 			'description'       => __( 'Sort collection by order.', 'cart-rest-api-for-woocommerce' ),
 			'type'              => 'string',
