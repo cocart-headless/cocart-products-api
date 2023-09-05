@@ -93,7 +93,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * @since 3.2.0 Moved products to it's own object and returned also pagination information.
 	 * @since 4.0.0 Added product categories and tags.
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
+	 * @param WP_REST_Request $request The request object.
 	 *
 	 * @return WP_Error|WP_REST_Response
 	 */
@@ -183,8 +183,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @since 4.0.0 Introduced.
 	 *
-	 * @param WC_Product      $product Product object.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WC_Product      $product The product object.
+	 * @param WP_REST_Request $request The request object.
 	 *
 	 * @return array Links for the given product.
 	 */
@@ -229,7 +229,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @since 4.0.0 Introduced.
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
+	 * @param WP_REST_Request $request The request object.
 	 *
 	 * @return array
 	 */
@@ -559,7 +559,17 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 			);
 		}
 
-		return apply_filters( 'cocart_prepare_objects_query', $args, $request );
+		/**
+		 * Filter allows you to prepare the objects query.
+		 *
+		 * @since 3.1.0 Introduced.
+		 *
+		 * @param array           $args    Arguments for the query.
+		 * @param WP_REST_Request $request The request object.
+		 */
+		$args = apply_filters( 'cocart_prepare_objects_query', $args, $request );
+
+		return $args;
 	} // END prepare_objects_query()
 
 	/**
@@ -570,8 +580,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * @since 3.1.0 Introduced.
 	 * @since 4.0.0 Replaced function `get_product_data` with `get_requested_data`.
 	 *
-	 * @param WC_Product      $product Product object.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WC_Product      $product The product object.
+	 * @param WP_REST_Request $request The request object.
 	 *
 	 * @return WP_REST_Response
 	 */
@@ -595,8 +605,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		 * @since 3.1.0 Introduced.
 		 *
 		 * @param WP_REST_Response $response The response object.
-		 * @param WC_Product       $product  Product object.
-		 * @param WP_REST_Request  $request  Request object.
+		 * @param WC_Product       $product  The product object.
+		 * @param WP_REST_Request  $request  The request object.
 		 */
 		return apply_filters( "cocart_prepare_{$this->post_type}_object_v2", $response, $product, $request );
 	} // END prepare_object_for_response()
@@ -608,12 +618,14 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * @access public
 	 *
 	 * @since 3.1.0 Introduced.
+	 * @since 4.0.0 Added the request object as parameter.
 	 *
-	 * @param WC_Product $product Product object.
+	 * @param WC_Product      $product The product object.
+	 * @param WP_REST_Request $request The request object.
 	 *
 	 * @return array $variations Returns the variations.
 	 */
-	public function get_variations( $product ) {
+	public function get_variations( $product, $request ) {
 		$variation_ids    = $product->get_children();
 		$tax_display_mode = $this->get_tax_display_mode();
 		$price_function   = $this->get_price_from_tax_display_mode( $tax_display_mode );
@@ -687,7 +699,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @since 3.1.0 Introduced.
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
+	 * @param WP_REST_Request $request The request object.
 	 *
 	 * @return WP_REST_Response
 	 */
@@ -733,7 +745,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @since 3.1.0 Introduced.
 	 *
-	 * @param WC_Product|WC_Product_Variation $product Product object.
+	 * @param WC_Product|WC_Product_Variation $product The product object.
 	 *
 	 * @return array $images Array of image data.
 	 */
@@ -803,7 +815,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @since 3.1.0 Introduced.
 	 *
-	 * @param WC_Product $product Product object.
+	 * @param WC_Product $product The product object.
 	 *
 	 * @return array $data Product data.
 	 */
@@ -938,8 +950,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @since 4.0.0 Introduced.
 	 *
-	 * @param WC_Product      $product Product object.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WC_Product      $product The product object.
+	 * @param WP_REST_Request $request The request object.
 	 *
 	 * @return array $data Product data.
 	 */
@@ -1110,7 +1122,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		}
 
 		if ( cocart_is_field_included( 'variations', $fields, $exclude_fields ) ) {
-			$product_data['variations'] = ( $product->is_type( 'variable' ) && $product->has_child() ) || ( $product->is_type( 'variable-subscription' ) && $product->has_child() ) ? $this->get_variations( $product ) : array();
+			$product_data['variations'] = ( $product->is_type( 'variable' ) && $product->has_child() ) || ( $product->is_type( 'variable-subscription' ) && $product->has_child() ) ? $this->get_variations( $product, $request ) : array();
 		}
 
 		if ( cocart_is_field_included( 'grouped_products', $fields, $exclude_fields ) ) {
@@ -1164,15 +1176,15 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		}
 
 		if ( cocart_is_field_included( 'related', $fields, $exclude_fields ) ) {
-			$product_data['related'] = $this->get_connected_products( $product, 'related' );
+			$product_data['related'] = $this->get_connected_products( $product, 'related', $request );
 		}
 
 		if ( cocart_is_field_included( 'upsells', $fields, $exclude_fields ) ) {
-			$product_data['upsells'] = $this->get_connected_products( $product, 'upsells' );
+			$product_data['upsells'] = $this->get_connected_products( $product, 'upsells', $request );
 		}
 
 		if ( cocart_is_field_included( 'cross_sells', $fields, $exclude_fields ) ) {
-			$product_data['cross_sells'] = $this->get_connected_products( $product, 'cross_sells' );
+			$product_data['cross_sells'] = $this->get_connected_products( $product, 'cross_sells', $request );
 		}
 
 		if ( cocart_is_field_included( 'total_sales', $fields, $exclude_fields ) ) {
@@ -1223,8 +1235,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @since 3.1.0 Introduced.
 	 *
-	 * @param WC_Variation_Product $product Product object.
-	 * @param WP_REST_Request      $request Request object.
+	 * @param WC_Variation_Product $product The product object.
+	 * @param WP_REST_Request      $request The request object.
 	 *
 	 * @return array $data Product data.
 	 */
@@ -1272,7 +1284,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @since 3.1.0 Introduced.
 	 *
-	 * @param WC_Product $product  Product object.
+	 * @param WC_Product $product  The product object.
 	 * @param string     $taxonomy Taxonomy slug.
 	 *
 	 * @return array $terms Taxonomy terms.
@@ -1338,7 +1350,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @since 3.1.0 Introduced.
 	 *
-	 * @param WC_Product|WC_Product_Variation $product Product object.
+	 * @param WC_Product|WC_Product_Variation $product The product object.
 	 *
 	 * @return array $attributes Attributes data.
 	 */
@@ -1396,13 +1408,15 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * @access public
 	 *
 	 * @since 3.1.0 Introduced.
+	 * @since 4.0.0 Added the request object as parameter.
 	 *
-	 * @param WC_Product $product Product object.
-	 * @param string     $type    Type of products to return.
+	 * @param WC_Product      $product The product object.
+	 * @param string          $type    Type of products to return.
+	 * @param WP_REST_Request $request The request object.
 	 *
 	 * @return array $connected_products Product data.
 	 */
-	public function get_connected_products( $product, $type ) {
+	public function get_connected_products( $product, $type, $request ) {
 		switch ( $type ) {
 			case 'upsells':
 				$ids = array_map( 'absint', $product->get_upsell_ids( 'view' ) );
@@ -1503,12 +1517,12 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @since 3.1.0 Introduced.
 	 *
-	 * @param WC_Product $product Product object.
+	 * @param WC_Product $product The product object.
 	 * @param string     $type    Product type.
 	 *
 	 * @return string $rest_url REST URL for adding product to the cart.
 	 */
-	public function add_to_cart_rest_url( $product, $type ) {
+	public function add_to_cart_rest_url( WC_Product $product, $type ) {
 		$id = $product->get_id();
 
 		$rest_url = rest_url( sprintf( '/%s/cart/add-item?id=%d', $this->namespace, $id ) );
@@ -1546,7 +1560,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 				 * @since 3.1.0 Introduced.
 				 *
 				 * @param string     $rest_url REST URL for adding product to the cart.
-				 * @param WC_Product $product  Product object.
+				 * @param WC_Product $product  The product object.
 				 * @param string     $type     Product type
 				 * @param int        $id       Product ID
 				 */
@@ -1595,14 +1609,16 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * @access public
 	 *
 	 * @since 3.1.0 Introduced.
+	 * @since 4.0.0 Added the request object as parameter.
 	 *
-	 * @param WC_Product $product          Product object.
-	 * @param string     $tax_display_mode If returned prices are incl or excl of tax.
+	 * @param WC_Product      $product          The product object.
+	 * @param string          $tax_display_mode If returned prices are incl or excl of tax.
+	 * @param WP_REST_Request $request          The request object.
 	 *
 	 * @return array
 	 */
-	public function get_price_range( $product, $tax_display_mode = '' ) {
-		$tax_display_mode = $this->get_tax_display_mode( $tax_display_mode );
+	public function get_price_range( WC_Product $product, $tax_display_mode, $request ) {
+		//$tax_display_mode = $this->get_tax_display_mode( $tax_display_mode );
 
 		$price = array();
 
@@ -1655,6 +1671,8 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	/**
 	 * Get all products taxonomy terms.
 	 *
+	 * Stores taxonomies as a transient for a whole day to cache for performance.
+	 *
 	 * @access public
 	 *
 	 * @since 4.0.0 Introduced.
@@ -1696,7 +1714,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @since 4.0.0 Introduced.
 	 *
-	 * @param WC_Product $product Product object.
+	 * @param WC_Product $product The product object.
 	 *
 	 * @return array
 	 */
