@@ -1724,8 +1724,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	public function get_collection_params() {
 		$params = parent::get_collection_params();
 
-		$defaults = get_option( 'cocart_settings', array() );
-		$defaults = ! empty( $defaults['products'] ) ? $defaults['products'] : array();
+		$defaults = cocart_get_settings( 'products' );
 
 		$params['fields'] = array(
 			'description'       => __( 'Specify each parent field you want to request separated by (,) in the response before the data is fetched.', 'cart-rest-api-for-woocommerce' ),
