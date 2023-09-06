@@ -1931,19 +1931,28 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 				'properties'  => array(
 					'price'         => array(
 						'description' => __( 'Product price (currently).', 'cart-rest-api-for-woocommerce' ),
-						'type'        => 'float',
+						'type'        => array(
+							"integer",
+							"string",
+						),
 						'context'     => array( 'view' ),
 						'readonly'    => true,
 					),
 					'regular_price' => array(
 						'description' => __( 'Product regular price.', 'cart-rest-api-for-woocommerce' ),
-						'type'        => 'float',
+						'type'        => array(
+							"integer",
+							"string",
+						),
 						'context'     => array( 'view' ),
 						'readonly'    => true,
 					),
 					'sale_price'    => array(
 						'description' => __( 'Product sale price.', 'cart-rest-api-for-woocommerce' ),
-						'type'        => 'float',
+						'type'        => array(
+							"integer",
+							"string",
+						),
 						'context'     => array( 'view' ),
 						'readonly'    => true,
 					),
@@ -1954,13 +1963,19 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 						'properties'  => array(
 							'from' => array(
 								'description' => __( 'Minimum product price range.', 'cart-rest-api-for-woocommerce' ),
-								'type'        => 'float',
+								'type'        => array(
+									"integer",
+									"string",
+								),
 								'context'     => array( 'view' ),
 								'readonly'    => true,
 							),
 							'to'   => array(
 								'description' => __( 'Maximum product price range.', 'cart-rest-api-for-woocommerce' ),
-								'type'        => 'float',
+								'type'        => array(
+									"integer",
+									"string",
+								),
 								'context'     => array( 'view' ),
 								'readonly'    => true,
 							),
@@ -2374,19 +2389,28 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 							'properties'  => array(
 								'price'         => array(
 									'description' => __( 'Product price (currently).', 'cart-rest-api-for-woocommerce' ),
-									'type'        => 'float',
+									'type'        => array(
+										"integer",
+										"string",
+									),
 									'context'     => array( 'view' ),
 									'readonly'    => true,
 								),
 								'regular_price' => array(
 									'description' => __( 'Product regular price.', 'cart-rest-api-for-woocommerce' ),
-									'type'        => 'float',
+									'type'        => array(
+										"integer",
+										"string",
+									),
 									'context'     => array( 'view' ),
 									'readonly'    => true,
 								),
 								'sale_price'    => array(
 									'description' => __( 'Product sale price.', 'cart-rest-api-for-woocommerce' ),
-									'type'        => 'float',
+									'type'        => array(
+										"integer",
+										"string",
+									),
 									'context'     => array( 'view' ),
 									'readonly'    => true,
 								),
