@@ -1552,24 +1552,30 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 * @return array Array of taxonomy terms.
 	 */
 	public function get_all_product_taxonomies( $taxonomy = 'cat', $page_num = '', $offset = '' ) {
-		$terms = array();
+		$terms = get_transient( 'cocart_products_taxonomies_' . $taxonomy );
 
-		$all_terms = get_terms( array(
-			'taxonomy'   => 'product_' . $taxonomy,
-			'hide_empty' => false,
-			'orderby'    => 'name',
-			'order'      => 'ASC',
-			'number'     => $page_num,
-			'offset'     => $offset,
-		) );
+		if ( empty( $terms ) ) {
+			$terms = array();
 
-		foreach ( $all_terms as $term ) {
-			$terms[] = array(
-				'id'       => $term->term_id,
-				'name'     => $term->name,
-				'slug'     => $term->slug,
-				'rest_url' => $this->product_rest_url( $term->term_id, $taxonomy ),
-			);
+			$all_terms = get_terms( array(
+				'taxonomy'   => 'product_' . $taxonomy,
+				'hide_empty' => false,
+				'orderby'    => 'name',
+				'order'      => 'ASC',
+				'number'     => $page_num,
+				'offset'     => $offset,
+			) );
+
+			foreach ( $all_terms as $term ) {
+				$terms[] = array(
+					'id'       => $term->term_id,
+					'name'     => $term->name,
+					'slug'     => $term->slug,
+					'rest_url' => $this->product_rest_url( $term->term_id, $taxonomy ),
+				);
+			}
+
+			set_transient( 'cocart_products_taxonomies_' . $taxonomy, $terms, DAY_IN_SECONDS );
 		}
 
 		return $terms;
