@@ -211,7 +211,7 @@ class CoCart_Products_Controller extends WP_REST_Controller {
 	 * Prepare links for the request.
 	 *
 	 * @access protected
-	 * @param  WC_Product      $product Product object.
+	 * @param  WC_Product      $product The product object.
 	 * @param  WP_REST_Request $request Request object.
 	 * @return array Links for the given product.
 	 */

@@ -140,7 +140,7 @@ class CoCart_Product_Attributes_Controller extends CoCart_REST_Terms_Controller 
 		 *
 		 * @param WP_REST_Response  $response  The response object.
 		 * @param object            $item      The original attribute object.
-		 * @param WP_REST_Request   $request   Request used to generate the response.
+		 * @param WP_REST_Request   $request   The request object.
 		 */
 		return apply_filters( 'cocart_prepare_product_attribute', $response, $item, $request );
 	}

@@ -90,7 +90,7 @@ class CoCart_REST_Product_Variations_V2_Controller extends CoCart_Product_Variat
 	/**
 	 * Validate the variation exists and is part of the variable product.
 	 *
-	 * @throws DataException Exception if invalid data is detected.
+	 * @throws CoCart\DataException Exception if invalid data is detected.
 	 *
 	 * @access public
 	 *
@@ -139,8 +139,8 @@ class CoCart_REST_Product_Variations_V2_Controller extends CoCart_Product_Variat
 	 *
 	 * @since 3.1.0 Introduced.
 	 *
-	 * @param WC_Product      $product Product instance.
-	 * @param WP_REST_Request $request Full details about the request.
+	 * @param WC_Product      $product The product object.
+	 * @param WP_REST_Request $request The request object.
 	 *
 	 * @return WP_REST_Response
 	 */
@@ -162,8 +162,8 @@ class CoCart_REST_Product_Variations_V2_Controller extends CoCart_Product_Variat
 		 * @since 3.1.0 Introduced.
 		 *
 		 * @param WP_REST_Response $response The response object.
-		 * @param WC_Product       $product Product object.
-		 * @param WP_REST_Request  $request Full details about the request.
+		 * @param WC_Product       $product  The product object.
+		 * @param WP_REST_Request  $request  The request object.
 		 */
 		return apply_filters( "cocart_prepare_{$this->post_type}_object_v2", $response, $product, $request );
 	} // END prepare_object_for_response()
@@ -176,7 +176,7 @@ class CoCart_REST_Product_Variations_V2_Controller extends CoCart_Product_Variat
 	 * @since 3.1.0 Introduced.
 	 * @since 4.0.0 Added CoCart headers to response.
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
+	 * @param WP_REST_Request $request The request object.
 	 *
 	 * @return WP_Error|WP_REST_Response
 	 */
@@ -202,7 +202,7 @@ class CoCart_REST_Product_Variations_V2_Controller extends CoCart_Product_Variat
 	 *
 	 * @since 3.1.0 Introduced.
 	 *
-	 * @param WC_Product      $product Product object.
+	 * @param WC_Product      $product The product object.
 	 * @param WP_REST_Request $request Request object.
 	 *
 	 * @return array $links Links for the given product.

@@ -79,7 +79,7 @@ if ( ! class_exists( 'CoCart_REST_Terms_V2_Controller' ) ) {
 		/**
 		 * Check permissions.
 		 *
-		 * @throws DataException Exception if invalid data is detected.
+		 * @throws CoCart\DataException Exception if invalid data is detected.
 		 *
 		 * @access protected
 		 *
