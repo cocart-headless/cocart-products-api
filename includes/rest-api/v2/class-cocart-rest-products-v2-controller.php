@@ -1580,23 +1580,116 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 	 *
 	 * @access public
 	 *
-	 * @since 4.0.0 Introduced.
+	 * @since 3.11.0 Introduced.
 	 *
 	 * @param WC_Product $product The product object.
 	 *
 	 * @return array
 	 */
-	public function get_meta_data( $product ) {
+	public function get_meta_data( $product, $request ) {
 		$meta_data = $product->get_meta_data();
 
-		$meta = array();
+		/**
+		 * Filter the meta data based on certain request parameters.
+		 *
+		 * @since 4.0.0 Introduced.
+		 */
+		$meta_data = $this->get_meta_data_for_response( $request, $meta_data );
 
-		foreach ( $meta_data as $meta_key => $meta_value ) {
-			$meta[ $meta_value->key ] = $meta_value;
+		$safe_meta = array();
+
+		/**
+		 * Filter allows you to ignore private meta data for the product to return.
+		 *
+		 * When filtering, only list the meta key!
+		 *
+		 * @since 3.11.0 Introduced.
+		 *
+		 * @param WC_Product $product The product object.
+		 */
+		$ignore_private_meta_keys = apply_filters( 'cocart_products_ignore_private_meta_keys', array(), $product );
+
+		foreach ( $meta_data as $meta ) {
+			$ignore_meta = false;
+
+			foreach ( $ignore_private_meta_keys as $ignore ) {
+				if ( str_starts_with( $meta->key, $ignore ) ) {
+					$ignore_meta = true;
+					break; // Exit the inner loop once a match is found.
+				}
+			}
+
+			/**
+			 * Filter by default will skip any meta data that contains an email address as a value.
+			 *
+			 * @since 4.0.0 Introduced.
+			 *
+			 * @param object $meta Meta data
+			 */
+			if ( apply_filters( 'cocart_products_meta_skip_email_values', true, $meta ) && is_email( trim( $meta->value ) ) ) {
+				$ignore_meta = true;
+			}
+
+			// Add meta data only if it's not ignored.
+			if ( ! $ignore_meta ) {
+				$safe_meta[ $meta->key ] = $meta;
+			}
 		}
 
-		return $meta;
+		/**
+		 * Filter allows you to control what remaining product meta data is safe to return.
+		 *
+		 * @since 3.11.0 Introduced.
+		 *
+		 * @param WC_Product $product The product object.
+		 */
+		return array_values( apply_filters( 'cocart_products_get_safe_meta_data', $safe_meta, $product ) );
 	} // END get_meta_data()
+
+	/**
+	 * Limit the contents of the meta_data property based on certain request parameters.
+	 *
+	 * Note that if both `include_meta` and `exclude_meta` are present in the request,
+	 * `include_meta` will take precedence.
+	 *
+	 * @access protected
+	 *
+	 * @since 4.0.0 Introduced.
+	 *
+	 * @param WP_REST_Request $request   The request object.
+	 * @param array           $meta_data All of the meta data for an object.
+	 *
+	 * @return array
+	 */
+	protected function get_meta_data_for_response( $request, $meta_data ) {
+		if ( ! in_array( 'meta_data', $this->fields, true ) ) {
+			return array();
+		}
+
+		$include = (array) $request['include_meta'];
+		$exclude = (array) $request['exclude_meta'];
+
+		if ( ! empty( $include ) ) {
+			$meta_data = array_filter(
+				$meta_data,
+				function( WC_Meta_Data $item ) use ( $include ) {
+					$data = $item->get_data();
+					return in_array( $data['key'], $include, true );
+				}
+			);
+		} elseif ( ! empty( $exclude ) ) {
+			$meta_data = array_filter(
+				$meta_data,
+				function( WC_Meta_Data $item ) use ( $exclude ) {
+					$data = $item->get_data();
+					return ! in_array( $data['key'], $exclude, true );
+				}
+			);
+		}
+
+		// Ensure the array indexes are reset so it doesn't get converted to an object in JSON.
+		return array_values( $meta_data );
+	} // END get_meta_data_for_response()
 
 	/**
 	 * Get the query params for collections of products.
@@ -1672,6 +1765,26 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 			'default'           => ! empty( $defaults['include_variations'] ) && $defaults['include_variations'] === 'yes' ? true : false,
 			'sanitize_callback' => 'wc_string_to_bool',
 			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		$params['include_meta'] = array(
+			'default'           => array(),
+			'description'       => __( 'Limit meta_data to specific keys.', 'cart-rest-api-for-woocommerce' ),
+			'type'              => 'array',
+			'items'             => array(
+				'type' => 'string',
+			),
+			'sanitize_callback' => 'wp_parse_list',
+		);
+
+		$params['exclude_meta'] = array(
+			'default'           => array(),
+			'description'       => __( 'Ensure meta_data excludes specific keys.', 'cart-rest-api-for-woocommerce' ),
+			'type'              => 'array',
+			'items'             => array(
+				'type' => 'string',
+			),
+			'sanitize_callback' => 'wp_parse_list',
 		);
 
 		return $params;
