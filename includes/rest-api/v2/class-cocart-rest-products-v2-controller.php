@@ -596,7 +596,6 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 			$data = $this->get_variation_product_data( $product, $request );
 		}
 
-		$data = $this->add_additional_fields_to_object( $data, $request );
 		$data = $this->filter_response_by_context( $data, 'view' );
 
 		$response = rest_ensure_response( $data );
