@@ -481,22 +481,24 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 		}
 
 		// Filter by sku.
-		if ( ! empty( $request['sku'] ) ) {
-			$skus = explode( ',', $request['sku'] );
+		if ( function_exists( 'wc_product_sku_enabled' ) && wc_product_sku_enabled() ) {
+			if ( ! empty( $request['sku'] ) ) {
+				$skus = explode( ',', $request['sku'] );
 
-			// Include the current string as a SKU too.
-			if ( 1 < count( $skus ) ) {
-				$skus[] = $request['sku'];
+				// Include the current string as a SKU too.
+				if ( 1 < count( $skus ) ) {
+					$skus[] = $request['sku'];
+				}
+
+				$args['meta_query'] = $this->add_meta_query( // WPCS: slow query ok.
+					$args,
+					array(
+						'key'     => '_sku',
+						'value'   => $skus,
+						'compare' => 'IN',
+					)
+				);
 			}
-
-			$args['meta_query'] = $this->add_meta_query( // WPCS: slow query ok.
-				$args,
-				array(
-					'key'     => '_sku',
-					'value'   => $skus,
-					'compare' => 'IN',
-				)
-			);
 		}
 
 		// Price filter.
