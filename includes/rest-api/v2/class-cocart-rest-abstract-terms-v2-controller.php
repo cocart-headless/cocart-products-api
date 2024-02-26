@@ -5,7 +5,12 @@
  * @author  Sébastien Dumont
  * @package CoCart\RESTAPI\Products\v2
  * @since   3.1.0 Introduced.
+ * @version 4.0.0
  */
+
+use CoCart\Utilities\APIPermission;
+use CoCart\DataException;
+use WP_REST_Request;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -69,8 +74,57 @@ if ( ! class_exists( 'CoCart_REST_Terms_V2_Controller' ) ) {
 					'schema'      => array( $this, 'get_public_item_schema' ),
 				)
 			);
-		}
+		} // END register_routes()
 
-	}
+		/**
+		 * Check permissions.
+		 *
+		 * @throws DataException Exception if invalid data is detected.
+		 *
+		 * @access protected
+		 *
+		 * @since 4.0.0 Introduced.
+		 *
+		 * @param WP_REST_Request $request The request object.
+		 *
+		 * @return bool|WP_Error
+		 *
+		 * @ignore Function ignored when parsed into Code Reference.
+		 */
+		protected function check_permissions( $request ) {
+			try {
+				$api_permission = APIPermission::has_api_permission( $request );
+
+				if ( ! $api_permission ) {
+					return $api_permission;
+				}
+
+				// Get taxonomy.
+				$taxonomy = $this->get_taxonomy( $request );
+
+				if ( ! $taxonomy || ! taxonomy_exists( $taxonomy ) ) {
+					throw new DataException( 'cocart_taxonomy_invalid', __( 'Taxonomy does not exist.', 'cart-rest-api-for-woocommerce' ), 404 );
+				}
+
+				// Check permissions for a single term.
+				$id = intval( $request['id'] );
+
+				if ( $id ) {
+					$term = get_term( $id, $taxonomy );
+
+					if ( is_wp_error( $term ) || ! $term || $term->taxonomy !== $taxonomy ) {
+						throw new DataException( 'cocart_term_invalid', __( 'Term does not exist.', 'cart-rest-api-for-woocommerce' ), 404 );
+					}
+
+					return true;
+				}
+			} catch ( DataException $e ) {
+				return \CoCart_Response::get_error_response( $e->getErrorCode(), $e->getMessage(), $e->getCode(), $e->getAdditionalData() );
+			}
+
+			return true;
+		} // END check_permissions()
+
+	} // END class
 
 }

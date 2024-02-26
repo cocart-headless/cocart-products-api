@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use CoCart\Utilities\APIPermission;
 use CoCart\Utilities\Fields;
 use CoCart\Utilities\MonetaryFormatting;
 
@@ -47,7 +48,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_items' ),
 					'args'                => $this->get_collection_params(),
-					'permission_callback' => '__return_true',
+					'permission_callback' => array( 'CoCart\Utilities\APIPermission', 'has_api_permission' ),
 				),
 				'allow_batch' => array( 'v1' => true ),
 				'schema'      => array( $this, 'get_public_items_schema' ),
@@ -76,7 +77,7 @@ class CoCart_REST_Products_V2_Controller extends CoCart_Products_Controller {
 							)
 						),
 					),
-					'permission_callback' => '__return_true',
+					'permission_callback' => array( 'CoCart\Utilities\APIPermission', 'has_api_permission' ),
 				),
 				'allow_batch' => array( 'v1' => true ),
 				'schema'      => array( $this, 'get_public_item_schema' ),

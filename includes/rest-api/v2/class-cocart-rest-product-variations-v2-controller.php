@@ -8,6 +8,9 @@
  * @version 4.0.0
  */
 
+use CoCart\Utilities\APIPermission;
+use CoCart\DataException;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -51,7 +54,7 @@ class CoCart_REST_Product_Variations_V2_Controller extends CoCart_Product_Variat
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_items' ),
 					'args'                => $this->get_collection_params(),
-					'permission_callback' => '__return_true',
+					'permission_callback' => array( 'CoCart\Utilities\APIPermission', 'has_api_permission' ),
 				),
 				'allow_batch' => array( 'v1' => true ),
 				'schema'      => array( $this, 'get_public_item_schema' ),
@@ -87,31 +90,43 @@ class CoCart_REST_Product_Variations_V2_Controller extends CoCart_Product_Variat
 	/**
 	 * Validate the variation exists and is part of the variable product.
 	 *
+	 * @throws DataException Exception if invalid data is detected.
+	 *
 	 * @access public
 	 *
 	 * @since 3.1.0 Introduced.
+	 * @since 4.0.0 Added API Permission check.
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
+	 * @param WP_REST_Request $request The request object.
 	 *
-	 * @return WP_Error|bool
+	 * @return bool|WP_Error
 	 */
 	public function validate_variation( $request ) {
-		$parent    = wc_get_product( (int) $request['product_id'] );
-		$variation = wc_get_product( (int) $request['id'] );
+		try {
+			$api_permission = APIPermission::has_api_permission( $request );
 
-		$variation_ids = $parent->get_children();
+			if ( ! $api_permission ) {
+				return $api_permission;
+			}
 
-		// Validate the variation product exists.
-		if ( ! $variation || 0 === $variation->get_id() ) {
-			return new WP_Error( 'cocart_' . $this->post_type . '_invalid_id', __( 'Invalid ID.', 'cart-rest-api-for-woocommerce' ), array( 'status' => 404 ) );
+			$parent    = wc_get_product( (int) $request['product_id'] );
+			$variation = wc_get_product( (int) $request['id'] );
+
+			$variation_ids = $parent->get_children();
+
+			// Validate the variation product exists.
+			if ( ! $variation || 0 === $variation->get_id() ) {
+				throw new DataException( 'cocart_' . $this->post_type . '_invalid_id', __( 'Invalid ID.', 'cart-rest-api-for-woocommerce' ), 404 );
+			}
+
+			// Validate the variation requested to see if it is not one of the variations for the variable product.
+			if ( ! in_array( $variation->get_id(), $variation_ids ) ) {
+				throw new DataException( 'cocart_' . $this->post_type . '_invalid_id', __( 'Invalid ID.', 'cart-rest-api-for-woocommerce' ), 404 );
+			}
+		} catch ( DataException $e ) {
+			return \CoCart_Response::get_error_response( $e->getErrorCode(), $e->getMessage(), $e->getCode(), $e->getAdditionalData() );
 		}
 
-		// Validate the variation requested to see if it is not one of the variations for the variable product.
-		if ( ! in_array( $variation->get_id(), $variation_ids ) ) {
-			return new WP_Error( 'cocart_' . $this->post_type . '_invalid_id', __( 'Invalid ID.', 'cart-rest-api-for-woocommerce' ), array( 'status' => 404 ) );
-		}
-
-		// Validation successful.
 		return true;
 	} // END validate_variation()
 
